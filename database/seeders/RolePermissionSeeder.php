@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\PermissionEnum;
 use App\Enums\RoleEnum;
 use App\Models\User;
+use App\Models\UserAPI;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -25,7 +26,10 @@ class RolePermissionSeeder extends Seeder
 
         // Create roles
         $masterRole = Role::firstOrCreate(['name' => RoleEnum::MASTER->value]);
-        $userRole = Role::firstOrCreate(['name' => RoleEnum::USER->value]);
+        $userRole = Role::firstOrCreate([
+            'name' => RoleEnum::USER->value,
+            'guard_name' => 'api'
+        ]);
 
         // Assign permissions to master role
         $masterRole->givePermissionTo([
@@ -46,7 +50,7 @@ class RolePermissionSeeder extends Seeder
         $masterUser->assignRole($masterRole);
 
         // Create regular user if not exists
-        $regularUser = User::firstOrCreate(
+        $regularUser = UserAPI::firstOrCreate(
             ['email' => 'user@example.com'],
             [
                 'name' => 'Regular User',

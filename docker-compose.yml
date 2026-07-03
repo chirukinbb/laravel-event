@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel-dev-dev
+    container_name: laravel-events-app
     volumes:
       - ./:/var/www/html
       - vendor-data:/var/www/html/vendor
@@ -30,7 +30,7 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: laravel-dev-db
+    container_name: laravel-events-db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: laravel_dev

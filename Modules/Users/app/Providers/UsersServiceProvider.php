@@ -51,7 +51,7 @@ class UsersServiceProvider extends ModuleServiceProvider
         $this->loadMigrationsFrom(module_path($this->name, 'Database/Migrations'));
 
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
-            $event->menu->addAfter('dashboard', [
+            $event->menu->addBefore('settings', [
                 'text' => 'User Management',
                 'url' => route('users::index'),
                 'key' => 'users',
