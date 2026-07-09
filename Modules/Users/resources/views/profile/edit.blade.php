@@ -2,11 +2,22 @@
 
 @section('title', 'Edit Profile')
 
+@section('plugins.BootstrapSelect', true)
+
 @section('content_header')
     <h1>
         <i class="fas fa-user-edit"></i> Edit Profile
     </h1>
 @stop
+
+@php
+    $config = [
+        "liveSearch" => true,
+        "liveSearchPlaceholder" => "Search...",
+        "showTick" => true,
+        "actionsBox" => true,
+    ];
+@endphp
 
 @section('content')
     <div class="container-fluid">
@@ -24,62 +35,36 @@
                         @csrf
                         @method('PUT')
 
-                        <div class="card-body">
+                        <div class="card-body">.
                             @if(session('success'))
                                 <div class="alert alert-success">
                                     {{ session('success') }}
                                 </div>
                             @endif
 
-                            @if($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        @foreach($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
+                            <x-adminlte-input name="name" placeholder="Visible Name"
+                                              value="{{ old('name', $user->profile->name) }}"/>
+                            <div class="row">
+                                <div class="col-4">
+                                    <x-adminlte-input name="phone" placeholder="Phone Number"
+                                                      value="{{ old('phone', $user->profile->phone) }}"/>
+                                    <input type="hidden" id="country_phone_code" name="country_phone_code"
+                                           value="{{ old('country_phone_code', $user->profile->country_phone_code) }}">
+                                    <input type="hidden" id="country_phone_iso" name="country_phone_iso"
+                                           value="{{ old('country_phone_iso', $user->profile->country_phone_iso) }}">
                                 </div>
-                            @endif
-
-                            <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text"
-                                       class="form-control @error('name') is-invalid @enderror"
-                                       id="name"
-                                       name="name"
-                                       value="{{ old('name', $user->name) }}"
-                                       required>
-                                @error('name')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
+                                <div class="col-4">
+                                    <x-adminlte-select-bs id="languages" name="languages[]"
+                                                          :config="array_merge($config, ['title' => 'Select Languages'])"
+                                                          multiple>
+                                        @foreach(config('users.languages') as $iso => $country)
+                                            <option value="{{ $iso }}">{{ $country }}</option>
+                                        @endforeach
+                                    </x-adminlte-select-bs>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="email">Email Address</label>
-                                <input type="email"
-                                       class="form-control @error('email') is-invalid @enderror"
-                                       id="email"
-                                       name="email"
-                                       value="{{ old('email', $user->email) }}"
-                                       required>
-                                @error('email')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label>Account Information</label>
-                                <p class="text-muted">
-                                    <strong>Registered:</strong> {{ $user->created_at->format('M d, Y H:i') }}<br>
-                                    <strong>Last Update:</strong> {{ $user->updated_at->format('M d, Y H:i') }}<br>
-                                    <strong>Email Verified:</strong>
-                                    @if($user->email_verified_at)
-                                        <span class="badge badge-success">Verified</span>
-                                    @else
-                                        <span class="badge badge-warning">Not Verified</span>
-                                    @endif
-                                </p>
-                            </div>
+                            <x-adminlte-textarea name="bio" placeholder="About Yourself"
+                                                 rows="5">{{ old('bio', $user->profile->bio) }}</x-adminlte-textarea>
                         </div>
 
                         <div class="card-footer">
@@ -100,5 +85,69 @@
 @section('js')
     <script>
         console.log('Profile edit page loaded');
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/6.4.3/imask.min.js"></script>
+
+    <script>
+        const phoneInput = document.querySelector("#phone");
+        let imaskInstance = null;
+
+        const iti = window.intlTelInput(phoneInput, {
+            initialCountry: "{{ old('country_phone_iso', $user->profile->country_phone_iso) ?? 'ua'}}",
+            separateDialCode: true,
+            nationalMode: true,
+        });
+
+        phoneInput.addEventListener("countrychange", setCountryPhoneCode)
+        setCountryPhoneCode()
+
+        function setCountryPhoneCode() {
+            const country = iti.getSelectedCountryData();
+            document.querySelector("#country_phone_code").value = country.dialCode;
+            document.querySelector("#country_phone_iso").value = country.iso2;
+        }
+
+        function applyCountryMask() {
+            const countryData = iti.getSelectedCountryData();
+
+            let exampleNumber = intlTelInputUtils.getExampleNumber(
+                countryData.iso2,
+                false,
+                intlTelInputUtils.numberFormat.NATIONAL
+            );
+
+            if (!exampleNumber) {
+                exampleNumber = "000000000000";
+            }
+
+            const dialCode = countryData.dialCode;
+            if (exampleNumber.startsWith('+' + dialCode)) {
+                exampleNumber = exampleNumber.substring(dialCode.length + 1).trim();
+            } else if (exampleNumber.startsWith(dialCode)) {
+                exampleNumber = exampleNumber.substring(dialCode.length).trim();
+            }
+
+            const maskPattern = exampleNumber.replace(/[0-9]/g, '0');
+
+            if (imaskInstance) {
+                imaskInstance.destroy();
+            }
+
+            // Создаем новую точную маску
+            imaskInstance = IMask(phoneInput, {
+                mask: maskPattern,
+                lazy: true,
+                overwrite: true,
+            });
+
+            phoneInput.value = '';
+        }
+
+        setTimeout(applyCountryMask, 200);
+
+        phoneInput.addEventListener('countrychange', applyCountryMask);
     </script>
 @stop

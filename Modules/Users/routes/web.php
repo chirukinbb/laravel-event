@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Users\Http\Controllers\FilterController;
 use Modules\Users\Http\Controllers\ProfileController;
 use Modules\Users\Http\Controllers\UsersController;
 
@@ -26,5 +27,9 @@ Route::middleware(['auth', 'verified'])->as('users::')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
+    });
+    Route::prefix('filter')->as('filter.')->group(function () {
+        Route::get('/edit', [FilterController::class, 'edit'])->name('edit');
+        Route::put('/', [FilterController::class, 'update'])->name('update');
     });
 });

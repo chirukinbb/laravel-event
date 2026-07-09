@@ -47,6 +47,15 @@ class RolePermissionSeeder extends Seeder
                 'password' => Hash::make('master123'),
             ]
         );
+        $masterUser->profile()->create([
+            'name' => 'Master User',
+            'phone' => '1234567890',
+            'country_phone_code' => '91',
+            'languages' => ['en', 'hi'],
+            'bio' => 'I am a master user',
+            'country_phone_iso' => 'ua'
+        ]);
+        $masterUser->filter()->create();
         $masterUser->assignRole($masterRole);
 
         // Create regular user if not exists
@@ -57,6 +66,15 @@ class RolePermissionSeeder extends Seeder
                 'password' => Hash::make('user123'),
             ]
         );
+        $regularUser->profile()->create([
+            'name' => 'Regular User',
+            'phone' => '1234567890',
+            'country_phone_code' => '91',
+            'languages' => ['en', 'hi'],
+            'bio' => 'I am a regular user',
+            'country_phone_iso' => 'ua'
+        ]);
+        $regularUser->filter()->create();
         $regularUser->assignRole($userRole);
     }
 }

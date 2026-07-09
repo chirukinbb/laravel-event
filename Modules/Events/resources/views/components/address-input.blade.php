@@ -1,9 +1,19 @@
 <div class="address-section mb-3">
     <div class="search-container w-100">
         <x-adminlte-input name="address" value="{{ $value ?? old('address') }}"
-                          placeholder="Start typing an address or city..." autocomplete="off" id="address-input"/>
+                          :placeholder="$placeholder" autocomplete="off" id="address-input"/>
     </div>
 </div>
+
+@once
+    @push('css')
+        <style>
+            .awesomplete {
+                width: 100%;
+            }
+        </style>
+    @endpush
+@endonce
 
 @once
     @push('js')

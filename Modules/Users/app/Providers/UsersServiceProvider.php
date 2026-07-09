@@ -58,6 +58,20 @@ class UsersServiceProvider extends ModuleServiceProvider
                 'icon' => 'fas fa-fw fa-users',
                 'can' => \App\Enums\PermissionEnum::VIEW_USERS->value,
             ]);
+            $event->menu->add([
+                'text' => 'My Profile',
+                'url' => route('users::profile.index'),
+                'icon' => 'fas fa-fw fa-user',
+                'classes' => 'text-center',
+                'topnav_user' => true
+            ]);
+            $event->menu->add([
+                'text' => 'Change Password',
+                'url' => route('password.request'),
+                'icon' => 'fas fa-fw fa-user',
+                'classes' => 'text-center',
+                'topnav_user' => true,
+            ]);
         });
 
         Event::listen(DashboardEvent::class, function (DashboardEvent $event) {

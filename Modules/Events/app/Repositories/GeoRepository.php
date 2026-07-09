@@ -4,6 +4,7 @@ namespace Modules\Events\Repositories;
 
 use App\Models\Country;
 use App\Models\Point;
+use Illuminate\Support\Facades\Http;
 
 class GeoRepository
 {
@@ -13,53 +14,71 @@ class GeoRepository
     public float $lat;
     public float $lng;
 
-    public function __construct(protected string $address)
+    // Сюда будет записываться полученный адрес при реверс-геокодинге
+    public ?string $address = null;
+
+    public function __construct(?string $address = null)
     {
+        $this->address = $address;
     }
 
-    public function geocoding()
+    /**
+     * Прямое геокодирование (Адрес -> Координаты)
+     */
+    public function geocoding(): void
     {
-        $response = \Http::withHeaders(['Referer' => route('home')])->get(
-            sprintf('https://api.tomtom.com/search/2/geocode/%s.json', $this->address),
+        if (!$this->address) {
+            return;
+        }
+
+        $response = Http::withHeaders(['Referer' => route('dashboard')])->get(
+            sprintf('https://api.tomtom.com/search/2/geocode/%s.json', urlencode($this->address)),
             ['key' => env('TOM_TOM_GEOCODING_API_KEY')]
         );
-        $address = json_decode($response->body())->results[0]->address;
 
-        $this->lat = json_decode($response->body())->results[0]->position->lat;
-        $this->lng = json_decode($response->body())->results[0]->position->lon;
+        if ($response->successful() && isset($response->json()['results'][0])) {
+            $result = $response->json()['results'][0];
 
-        $this->setCountry($address->countryCode, $address->country);
-        $this->setPoint($address->municipalitySubdivision);
+            $this->lat = (float)$result['position']['lat'];
+            $this->lng = (float)$result['position']['lon'];
+        }
     }
 
-    protected function setCountry(string $iso, string $name)
+    /**
+     * Статический метод для обратного геокодирования (Координаты -> Адрес)
+     */
+    public static function reverseGeocoding(float $lat, float $lng): ?self
     {
-        $countryModel = Country::whereIso($iso)->first();
+        $response = Http::withHeaders(['Referer' => route('dashboard')])->get(
+            sprintf('https://api.tomtom.com/search/2/reverseGeocode/%s,%s.json', $lat, $lng),
+            [
+                'key' => env('TOM_TOM_GEOCODING_API_KEY'),
+                'lang' => 'ru-RU' // Можно убрать или поменять локаль при необходимости
+            ]
+        );
 
-        if (is_null($countryModel)) {
-            $countryModel = Country::getModel();
+        if ($response->successful()) {
+            $data = $response->json();
 
-            $countryModel->iso = $iso;
-            $countryModel->name = $name;
+            if (isset($data['addresses'][0])) {
+                $addressData = $data['addresses'][0];
+                $freeformAddress = $addressData['address']['freeformAddress'] ?? null;
 
-            $countryModel->save();
+                // Создаем инстанс репозитория и наполняем его данными
+                $repo = new self($freeformAddress);
+                $repo->lat = $lat;
+                $repo->lng = $lng;
+                $repo->iso = $addressData['address']['countryCode'] ?? '';
+
+                return $repo;
+            }
         }
 
-        $this->country_id = $countryModel->id;
+        return null;
     }
 
-    protected function setPoint(string $name)
+    public function getPosition(): array
     {
-        $pointModel = Point::whereName($name)->first();
-
-        if (is_null($pointModel)) {
-            $pointModel = Point::getModel();
-
-            $pointModel->name = $name;
-
-            $pointModel->save();
-        }
-
-        $this->point_id = $pointModel->id;
+        return [$this->lat, $this->lng];
     }
 }

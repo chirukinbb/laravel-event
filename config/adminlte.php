@@ -381,6 +381,21 @@ return [
                 ],
             ],
         ],
+        'BootstrapSelect' => [
+            'active' => true, // Не забудьте включить, если нужно активировать
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css',
+                ],
+            ],
+        ],
         'Select2' => [
             'active' => false,
             'files' => [
@@ -488,6 +503,21 @@ return [
                     'type' => 'js',
                     'asset' => false,
                     'location' => 'https://cdnjs.cloudflare.com/ajax/libs/bs-custom-file-input/1.3.4/bs-custom-file-input.min.js',
+                ],
+            ],
+        ],
+        'BootstrapSlider' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'https://cdn.jsdelivr.net/npm/bootstrap-slider@11.0.2/dist/bootstrap-slider.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => 'https://cdn.jsdelivr.net/npm/bootstrap-slider@11.0.2/dist/css/bootstrap-slider.min.css',
                 ],
             ],
         ],

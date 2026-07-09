@@ -85,7 +85,7 @@
             </div>
         </div>
 
-        <x-events::address-input/>
+        <x-events::address-input placeholder="Start typing an address or city..."/>
 
         <select name="tags[]" id="tags" multiple="multiple" class="form-control mb-3">
             @foreach($tags as $tag)

@@ -162,35 +162,95 @@
             </div>
         </div>
 
-        {{-- Quick actions --}}
-        <div class="row mt-3">
-            <div class="col-md-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-cogs"></i>
-                            Quick Actions
-                        </h3>
+            {{-- Quick actions --}}
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="card card-default">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-user-circle"></i>
+                                Profile Information
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Visible Name:</th>
+                                    <td>{{ $user->profile->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Phone:</th>
+                                    <td>{{ $user->profile->phone }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Location:</th>
+                                    <td>{{ $user->profile->languages() ?? 'N/A' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Bio:</th>
+                                    <td>{{ $user->profile->bio }}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <a href="{{ route('dashboard') }}" class="btn btn-primary">
-                            <i class="fas fa-tachometer-alt"></i> Back to Dashboard
-                        </a>
-                        <a href="{{ route('password.request') }}" class="btn btn-warning">
-                            <i class="fas fa-key"></i> Change Password
-                        </a>
-                        <a href="{{ route('users::profile.edit') }}" class="btn btn-info">
-                            <i class="fas fa-edit"></i> Edit Profile
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </button>
-                        </form>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card card-default">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-user-circle"></i>
+                                Filter settings
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Radius:</th>
+                                    <td>{{ $user->filter->radius }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Categories:</th>
+                                    <td>{{ $user->filter->categories() }}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            {{-- Quick actions --}}
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-cogs"></i>
+                                Quick Actions
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <a href="{{ route('dashboard') }}" class="btn btn-primary">
+                                <i class="fas fa-tachometer-alt"></i> Back to Dashboard
+                            </a>
+                            <a href="{{ route('password.request') }}" class="btn btn-warning">
+                                <i class="fas fa-key"></i> Change Password
+                            </a>
+                            <a href="{{ route('users::profile.edit') }}" class="btn btn-info">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </a>
+                            <a href="{{ route('users::filter.edit') }}" class="btn btn-info">
+                                <i class="fas fa-edit"></i> Edit Filter
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 @stop
