@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Modules\Events\Http\Requests\EventRequest;
 use Modules\Events\Jobs\GeocodeJob;
+use Modules\Events\Jobs\NotificationJob;
 use Modules\Events\Models\Category;
 use Modules\Events\Models\Event;
 use Modules\Events\Models\Tag;
@@ -50,6 +51,7 @@ class EventsController extends Controller
         $eventModel->save();
 
         GeocodeJob::dispatch($eventModel->id);
+        NotificationJob::dispatch($eventModel->id);
 
         $tagService = new TagService($eventModel);
 

@@ -76,4 +76,9 @@ class User extends Authenticatable implements MustVerifyEmail
             $user->filter()->create();
         });
     }
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
+    }
 }

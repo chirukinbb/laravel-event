@@ -4,9 +4,11 @@ namespace Modules\Users\Providers;
 
 use App\Events\DashboardEvent;
 use App\Events\SettingsEvent;
+use App\Events\UserResourceEvent;
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 use Modules\Users\Enums\SettingsEnum;
+use Modules\Users\Http\Resources\ProfileResource;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
 class UsersServiceProvider extends ModuleServiceProvider
@@ -75,13 +77,13 @@ class UsersServiceProvider extends ModuleServiceProvider
         });
 
         Event::listen(DashboardEvent::class, function (DashboardEvent $event) {
-            $event->addMenuItems([
+            $event->addUnits([
                 'name' => 'My Profile',
                 'url' => route('users::profile.index'),
                 'icon' => 'fas fa-fw fa-user',
                 'can' => \App\Enums\PermissionEnum::VIEW_USERS->value,
             ]);
-            $event->addMenuItems([
+            $event->addUnits([
                 'name' => 'User Management',
                 'url' => route('users::index'),
                 'icon' => 'fas fa-fw fa-users',
@@ -90,7 +92,12 @@ class UsersServiceProvider extends ModuleServiceProvider
         });
 
         Event::listen(SettingsEvent::class, function (SettingsEvent $event) {
-            $event->addSettingUnits(SettingsEnum::cases());
+            $event->addUnits(SettingsEnum::cases());
+        });
+
+        Event::listen(UserResourceEvent::class, function (UserResourceEvent $event) {
+            $event->addUnit('profile', ProfileResource::make(auth()->user()->profile));
+            $event->addUnit('filter', ProfileResource::make(auth()->user()->filter));
         });
     }
 }

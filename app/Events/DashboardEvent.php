@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Traits\HasCollection;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -9,17 +10,7 @@ use Illuminate\Queue\SerializesModels;
 
 class DashboardEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    private $menuItems = [];
-
-    /**
-     * Create a new event instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+    use Dispatchable, InteractsWithSockets, SerializesModels, HasCollection;
 
     /**
      * Get the channels the event should broadcast on.
@@ -33,13 +24,13 @@ class DashboardEvent
         ];
     }
 
-    public function getMenuItems()
+    public function getUnits(): array
     {
-        return $this->menuItems;
+        return $this->collection->toArray();
     }
 
-    public function addMenuItems($menuItems)
+    public function addUnits(mixed $unit)
     {
-        $this->menuItems[] = $menuItems;
+        $this->collection->push($unit);
     }
 }

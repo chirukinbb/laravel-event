@@ -37,7 +37,7 @@
                             <a href="{{ route('dashboard') }}" class="btn btn-primary">
                                 <i class="fas fa-sync-alt"></i> Refresh
                             </a>
-                            @foreach($event->getMenuItems() as $item)
+                            @foreach($event->getUnits() as $item)
                                 @continue(!is_null($item['can']) && !auth()->user()->can($item['can']))
                                 <a href="{{ $item['url'] }}" class="btn btn-success">
                                     <i class="{{ $item['icon'] }}"></i> {{ $item['name'] }}

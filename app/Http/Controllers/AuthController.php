@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Socialite;
 use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
@@ -94,5 +95,24 @@ class AuthController extends Controller
         Auth::logout();
 
         return redirect("/login");
+    }
+
+    function socialLogin(string $provider)
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    function socialEntry(string $provider)
+    {
+        $user = Socialite::driver($provider)->user();
+
+        if (User::where('email', $user->email)->exists()) {
+            $user = User::where('email', $user->email)->first();
+            Auth::login($user);
+            return redirect()->route('dashboard');
+        } else {
+            return redirect()->route('login')
+                ->with('error', 'Please create an account first.');
+        }
     }
 }

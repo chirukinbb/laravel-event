@@ -2,9 +2,11 @@
 
 namespace Modules\Events\Providers;
 
+use App\Events\AbilitiesEvent;
 use App\Events\DashboardEvent;
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
+use Modules\Events\Enums\PermissionEnum;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
 class EventsServiceProvider extends ModuleServiceProvider
@@ -66,7 +68,7 @@ class EventsServiceProvider extends ModuleServiceProvider
         });
 
         Event::listen(DashboardEvent::class, function (DashboardEvent $event) {
-            $event->addMenuItems([
+            $event->addUnits([
                 'name' => 'Event Management',
                 'url' => route('events::index'),
                 'icon' => 'fas fa-fw fa-calendar-alt',
@@ -74,8 +76,13 @@ class EventsServiceProvider extends ModuleServiceProvider
             ]);
         });
 
-//        Event::listen(SettingsEvent::class, function (SettingsEvent $event) {
-//            $event->addSettingUnits(SettingsEnum::cases());
-//        });
+        Event::listen(AbilitiesEvent::class, function (AbilitiesEvent $event) {
+            $event->addUnits([
+                PermissionEnum::API_CREATE_EVENT,
+                PermissionEnum::API_EDIT_EVENT,
+                PermissionEnum::API_VIEW_EVENT,
+                PermissionEnum::API_VIEW_EVENT_LIST,
+            ]);
+        });
     }
 }

@@ -17,7 +17,7 @@ class SettingsService
     public function __construct()
     {
         $this->event = new SettingsEvent();
-        $this->event->addSettingUnits(SettingEnum::cases());
+        $this->event->addUnits(SettingEnum::cases());
         event($this->event);
 
         Setting::whereIn('name', collect($this->getSettingUnits())->map(function (\UnitEnum $setting) {
@@ -102,6 +102,6 @@ class SettingsService
 
     public function getSettingUnits(): array
     {
-        return $this->event->getSettingUnits();
+        return $this->event->getUnits();
     }
 }

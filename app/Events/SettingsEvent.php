@@ -2,25 +2,15 @@
 
 namespace App\Events;
 
+use App\Traits\HasCollection;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
 
 class SettingsEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    private Collection $unoits;
-
-    /**
-     * Create a new event instance.
-     */
-    public function __construct()
-    {
-        $this->unoits = collect();
-    }
+    use Dispatchable, InteractsWithSockets, SerializesModels, HasCollection;
 
     /**
      * Get the channels the event should broadcast on.
@@ -34,15 +24,8 @@ class SettingsEvent
         ];
     }
 
-    public function getSettingUnits(): array
+    public function getUnits(): array
     {
-        return $this->unoits->toArray();
-    }
-
-    public function addSettingUnits(array $settings)
-    {
-        collect($settings)->each(function (\UnitEnum $setting) {
-            $this->unoits->push($setting);
-        });
+        return $this->collection->toArray();
     }
 }
