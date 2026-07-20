@@ -10,10 +10,9 @@ use Illuminate\Queue\SerializesModels;
 use Modules\Event\Repositories\GeoRepository;
 use Modules\Events\Models\Event;
 use Modules\Events\Notifications\EventNotification;
-use Modules\Events\Notifications\RefreshNotification;
 use Modules\Users\Models\Filter;
 
-class NotificationJob implements ShouldQueue
+class EventUpdatedNotificationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -27,7 +26,6 @@ class NotificationJob implements ShouldQueue
 
         Filter::each(function (Filter $filter) use ($event) {
             if ($event->user_id !== $filter->user_id) {
-                $filter->user->notify(new RefreshNotification());
                 if ($this->distance($filter->center[0], $filter->center[1], $event->coordinate_lat, $event->coordinate_lng) <= $filter->radius) {
                     $filter->user->notify(new EventNotification($event));
                 }

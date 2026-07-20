@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Modules\Events\Models\Event;
+use Modules\Events\Models\Member;
+use Modules\Users\Models\Feedback;
 use Modules\Users\Models\Filter;
 use Modules\Users\Models\Profile;
 use Spatie\Permission\Traits\HasRoles;
@@ -52,6 +54,11 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    public function members(): HasMany
+    {
+        return $this->hasMany(Member::class);
+    }
+
     public function profile()
     {
         return $this->hasOne(Profile::class, 'user_id', 'id');
@@ -60,6 +67,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function filter(): HasOne
     {
         return $this->hasOne(Filter::class, 'user_id', 'id');
+    }
+
+    public function feedback(): HasOne
+    {
+        return $this->hasOne(Feedback::class, 'user_id', 'id');
     }
 
     public function events(): HasMany

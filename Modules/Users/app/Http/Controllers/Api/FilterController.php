@@ -1,24 +1,13 @@
 <?php
 
-namespace Modules\Users\Http\Controllers;
+namespace Modules\Users\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Modules\Events\Models\Category;
 use Modules\Events\Repositories\GeoRepository;
 use Modules\Users\Http\Requests\FilterRequest;
 
 class FilterController extends Controller
 {
-    public function edit()
-    {
-        $user = auth()->user();
-        $categories = Category::all();
-        $geo = GeoRepository::reverseGeocoding($user->filter->center[0], $user->filter->center[1]);
-        $address = $geo->address;
-
-        return view('users::profile.filter', compact('user', 'categories', 'address'));
-    }
-
     public function update(FilterRequest $request)
     {
         $valid = $request->validated();
@@ -31,7 +20,8 @@ class FilterController extends Controller
             'center' => $tomtom->getPosition()
         ]);
 
-        return redirect()->route('users::profile.index')
-            ->with('success', 'Filter updated successfully.');
+        return response()->json([
+            'message' => 'Filter updated successfully.'
+        ]);
     }
 }

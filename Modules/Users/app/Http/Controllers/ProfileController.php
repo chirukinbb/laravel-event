@@ -3,7 +3,7 @@
 namespace Modules\Users\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Modules\Users\Http\Requests\ProfileRequest;
 
 class ProfileController extends Controller
 {
@@ -19,18 +19,11 @@ class ProfileController extends Controller
         return view('users::profile.edit', compact('user'));
     }
 
-    public function update(Request $request)
+    public function update(ProfileRequest $request)
     {
         $user = auth()->user()->with('profile')->first();
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'country_phone_code' => 'required|string|max:255',
-            'country_phone_iso' => 'required|string|max:255',
-            'languages' => 'required|array',
-            'bio' => 'required|string'
-        ]);
+        $validated = $request->validated();
 
         $user->update($validated);
 

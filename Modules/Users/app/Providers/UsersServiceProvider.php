@@ -7,7 +7,10 @@ use App\Events\SettingsEvent;
 use App\Events\UserResourceEvent;
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
+use Modules\Events\Events\EventResourceEvent;
 use Modules\Users\Enums\SettingsEnum;
+use Modules\Users\Http\Resources\AuthorResource;
+use Modules\Users\Http\Resources\FilterResource;
 use Modules\Users\Http\Resources\ProfileResource;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
@@ -97,7 +100,11 @@ class UsersServiceProvider extends ModuleServiceProvider
 
         Event::listen(UserResourceEvent::class, function (UserResourceEvent $event) {
             $event->addUnit('profile', ProfileResource::make(auth()->user()->profile));
-            $event->addUnit('filter', ProfileResource::make(auth()->user()->filter));
+            $event->addUnit('filter', FilterResource::make(auth()->user()->filter));
+        });
+
+        Event::listen(EventResourceEvent::class, function (EventResourceEvent $event) {
+            $event->addUnit('author', AuthorResource::make(auth()->user()->profile));
         });
     }
 }

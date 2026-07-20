@@ -3,7 +3,7 @@
 namespace Modules\Events\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\Events\Http\Requests\CategoryRequest;
+use Modules\Events\Http\Requests\FilterRequest;
 use Modules\Events\Models\Category;
 
 class CategoryController extends Controller
@@ -20,7 +20,7 @@ class CategoryController extends Controller
         return view('events::categories.create');
     }
 
-    public function store(CategoryRequest $request)
+    public function store(FilterRequest $request)
     {
         $model = Category::getModel();
 
@@ -49,7 +49,7 @@ class CategoryController extends Controller
         return view('events::categories.edit', compact('category'));
     }
 
-    public function update(CategoryRequest $request, $id)
+    public function update(FilterRequest $request, $id)
     {
         $model = Category::find($id);
 
