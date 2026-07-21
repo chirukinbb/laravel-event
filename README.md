@@ -68,3 +68,37 @@ via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilitie
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 📱 API Документация для Mobile App
+
+Этот проект представляет собой веб-платформу для управления событиями с RESTful API.
+
+### 📂 Файлы документации для Android разработчика:
+
+- **`API_DOCUMENTATION_FOR_ANDROID.md`** - Полная документация всех API endpoints
+- **`ANDROID_DEVELOPER_README.md`** - Краткая инструкция по архитектуре и данным
+- **`README_API.md`** - Общая информация о проекте
+
+### 🔑 Основные возможности API:
+
+- 📅 Управление событиями (список, детали, регистрация)
+- 👤 Профиль пользователя и настройки
+- ⭐ Категории событий
+- 💬 Отзывы пользователей
+- 🔐 Авторизация через Sanctum JWT токены
+
+### 🚀 Быстрый старт для разработчика:
+
+```bash
+# Установка зависимостей
+composer install
+npm install
+
+# Миграции БД
+php artisan migrate
+
+# Запуск сервера
+php artisan serve
+```
+
+API доступен на: `http://localhost:8000/api/v1`

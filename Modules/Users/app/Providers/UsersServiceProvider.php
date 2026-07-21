@@ -101,6 +101,7 @@ class UsersServiceProvider extends ModuleServiceProvider
         Event::listen(UserResourceEvent::class, function (UserResourceEvent $event) {
             $event->addUnit('profile', ProfileResource::make(auth()->user()->profile));
             $event->addUnit('filter', FilterResource::make(auth()->user()->filter));
+            $event->addUnit('has_feedback', !!auth()->user()->feedback);
         });
 
         Event::listen(EventResourceEvent::class, function (EventResourceEvent $event) {
