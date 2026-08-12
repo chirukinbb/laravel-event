@@ -56,3 +56,8 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+Route::prefix('auth')->as('auth.')->group(function () {
+    Route::get('/{provider}/redirect', [AuthController::class, 'socialLogin'])->name('redirect');
+    Route::get('/{provider}/callback', [AuthController::class, 'socialEntry'])->name('callback');
+});
+

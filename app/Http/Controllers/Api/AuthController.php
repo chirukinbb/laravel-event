@@ -3,41 +3,51 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Laravel\Socialite\Socialite;
+use App\Services\UserService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function index(string $provider)
+    public function login(LoginRequest $request)
     {
-        return Socialite::driver($provider)->redirect();
-    }
+        $credentials = $request->validated();
 
-    public function entry(string $provider)
-    {
-        if ($provider == 'manual') {
-            return $this->manualLogin();
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            return response()->json([
+                'message' => 'Invalid email or password.'
+            ], 401);
         }
 
-        $user = Socialite::driver($provider)->user();
-
-        if (User::where('email', $user->email)->exists()) {
-            $user = User::where('email', $user->email)->first();
-        } else {
-            User::create([
-                'name' => $user->name,
-                'email' => $user->email,
-                'provider' => $provider,
-                'provider_id' => $user->id,
-            ]);
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
         }
 
         return UserResource::make($user);
     }
 
-    public function manualLogin()
+    public function register(RegisterRequest $request)
     {
-        $request = request();
+        $password = Str::random(12);
+
+        try {
+            (new UserService())->signup($request->name, $request->email, $password);
+
+            return response()->json(['message' => 'Registration successful! Please check your email for the password.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Try later'], 401);
+        }
+    }
+
+    public function me(Request $request)
+    {
+        return UserResource::make($request->user());
     }
 }

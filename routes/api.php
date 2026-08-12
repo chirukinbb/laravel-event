@@ -3,7 +3,8 @@
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('auth')->as('api.auth.')->group(function () {
-    Route::get('/{provider}/redirect', [AuthController::class, 'index'])->name('redirect');
-    Route::get('/{provider}/callback', [AuthController::class, 'entry'])->name('callback');
+Route::prefix('v1')->group(function () {
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
+    Route::get('me', [AuthController::class, 'me']);
 });

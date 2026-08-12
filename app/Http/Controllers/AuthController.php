@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\RoleEnum;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use App\Notifications\NewUserNotification;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Socialite;
 use Spatie\Permission\Models\Role;
@@ -21,13 +22,8 @@ class AuthController extends Controller
     }
 
     // Handle login request with static credentials (demo only)
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            "email" => "required|email",
-            "password" => "required",
-        ]);
-
         if (Auth::attempt(['email' => $request->post('email'), 'password' => $request->post('password')], true)) {
             $user = Auth::user();
 
@@ -53,37 +49,16 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $request->validate([
-            "email" => "required|email|unique:users,email",
-            "name" => "required",
-        ]);
-
-        // Generate a random password
         $password = Str::random(12);
 
-        // Create user with generated password
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($password)
-        ]);
-
-        // Assign default User role
-        $userRole = Role::where('name', RoleEnum::USER->value)->first();
-        if ($userRole) {
-            $user->assignRole($userRole);
-        }
-
         try {
-            $user->notify(new NewUserNotification($password));
+            (new UserService())->signup($request->name, $request->email, $password);
 
             return redirect()->route('login')
                 ->with('success', 'Registration successful! Please check your email for the password.');
         } catch (\Exception $e) {
-            $user->delete();
-
             return back()->withErrors([
                 'email' => 'Failed to send registration email. Please try again later.'
             ]);
@@ -97,22 +72,39 @@ class AuthController extends Controller
         return redirect("/login");
     }
 
-    function socialLogin(string $provider)
+    function socialLogin(string $provider, Request $request)
     {
-        return Socialite::driver($provider)->redirect();
+        $source = $request->get('source', 'web');
+        $state = json_encode(['source' => $source]);
+
+        return Socialite::driver($provider)
+            ->stateless()
+            ->with(['state' => base64_encode($state)])
+            ->redirect();
     }
 
-    function socialEntry(string $provider)
+    function socialEntry(string $provider, Request $request)
     {
         $user = Socialite::driver($provider)->user();
 
         if (User::where('email', $user->email)->exists()) {
             $user = User::where('email', $user->email)->first();
+        } else {
+            $password = Str::random(12);
+            $user = (new UserService())->signup($user->name, $user->email, $password);
+        }
+
+        $source = 'web';
+        if ($request->has('state')) {
+            $stateData = json_decode(base64_decode($request->get('state')), true);
+            $source = $stateData['source'] ?? 'web';
+        }
+
+        if ($source === 'web') {
             Auth::login($user);
             return redirect()->route('dashboard');
-        } else {
-            return redirect()->route('login')
-                ->with('error', 'Please create an account first.');
         }
+
+        return redirect()->away("events://auth-callback?token={$user->createToken(RoleEnum::USER->name)->plainTextToken}");
     }
 }

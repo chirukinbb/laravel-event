@@ -27,8 +27,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(RouteMatched::class, function () {
             if (!$this->app->runningInConsole()) {
-                Config::set('services.google.redirect', route('api.auth.callback', ['provider' => 'google']));
-                Config::set('services.facebook.redirect', route('api.auth.callback', ['provider' => 'facebook']));
+                Config::set('services.google.redirect', route('auth.callback', ['provider' => 'google']));
+                Config::set('services.facebook.redirect', route('auth.callback', ['provider' => 'facebook']));
             }
         });
     }
