@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Enums\RoleEnum;
-use App\Models\User;
+use App\Models\UserAPI;
 use App\Notifications\NewUserNotification;
 use Hash;
 use Spatie\Permission\Models\Role;
@@ -13,11 +13,13 @@ class UserService
     public function signup(
         string $name,
         string $email,
-        string $password
+        string $password,
+        string $guard = 'web'
     )
     {
+        $class = $guard === 'web' ? 'App\Models\User' : UserAPI::class;
         // Create user with generated password
-        $user = User::create([
+        $user = $class::create([
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password)

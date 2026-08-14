@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Models\UserAPI;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +18,7 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
-        $user = User::where('email', $credentials['email'])->first();
+        $user = UserAPI::where('email', $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json([
@@ -38,7 +38,7 @@ class AuthController extends Controller
         $password = Str::random(12);
 
         try {
-            (new UserService())->signup($request->name, $request->email, $password);
+            (new UserService())->signup($request->name, $request->email, $password, 'api');
 
             return response()->json(['message' => 'Registration successful! Please check your email for the password.'], 200);
         } catch (\Exception $e) {

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\RoleEnum;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Models\User;
+use App\Models\UserAPI;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,19 +85,20 @@ class AuthController extends Controller
 
     function socialEntry(string $provider, Request $request)
     {
-        $user = Socialite::driver($provider)->user();
-
-        if (User::where('email', $user->email)->exists()) {
-            $user = User::where('email', $user->email)->first();
-        } else {
-            $password = Str::random(12);
-            $user = (new UserService())->signup($user->name, $user->email, $password);
-        }
-
         $source = 'web';
         if ($request->has('state')) {
             $stateData = json_decode(base64_decode($request->get('state')), true);
             $source = $stateData['source'] ?? 'web';
+        }
+
+        $user = Socialite::driver($provider)->stateless()->user();
+        $class = $source === 'web' ? 'App\Models\User' : UserAPI::class;
+
+        if ($class::where('email', $user->email)->exists()) {
+            $user = $class::where('email', $user->email)->first();
+        } else {
+            $password = Str::random(12);
+            $user = (new UserService())->signup($user->name, $user->email, $password, $source);
         }
 
         if ($source === 'web') {
@@ -105,6 +106,6 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         }
 
-        return redirect()->away("events://auth-callback?token={$user->createToken(RoleEnum::USER->name)->plainTextToken}");
+        return redirect()->away(env('DEEP_LINK') . "?token={$user->createToken(RoleEnum::USER->name)->plainTextToken}");
     }
 }

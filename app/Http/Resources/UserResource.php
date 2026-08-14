@@ -6,13 +6,13 @@ use App\Enums\PermissionEnum;
 use App\Enums\RoleEnum;
 use App\Events\AbilitiesEvent;
 use App\Events\UserResourceEvent;
-use App\Models\User;
+use App\Models\UserAPI;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
     /**
-     * @var User
+     * @var UserAPI
      */
     public $resource;
 
