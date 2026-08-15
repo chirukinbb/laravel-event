@@ -18,7 +18,7 @@ class UserResource extends JsonResource
 
     public function toArray($request): array
     {
-        $userResourceEvent = new UserResourceEvent();
+        $userResourceEvent = new UserResourceEvent($this->resource);
 
         $userResourceEvent->addUnit('name', $this->resource->name);
         $userResourceEvent->addUnit('token', $this->resource->createToken(RoleEnum::USER->name, $this->abilities())->plainTextToken);

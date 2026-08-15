@@ -50,8 +50,6 @@ class UsersServiceProvider extends ModuleServiceProvider
      */
     public function boot(): void
     {
-        $request = request();
-
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
@@ -100,14 +98,14 @@ class UsersServiceProvider extends ModuleServiceProvider
             $event->addUnits(SettingsEnum::cases());
         });
 
-        Event::listen(UserResourceEvent::class, function (UserResourceEvent $event) use ($request) {
-            $event->addUnit('profile', ProfileResource::make($request->user()->profile));
-            $event->addUnit('filter', FilterResource::make($request->user()->filter));
-            $event->addUnit('has_feedback', !!$request->user()->feedback);
+        Event::listen(UserResourceEvent::class, function (UserResourceEvent $event) {
+            $event->addUnit('profile', ProfileResource::make($event->user->profile));
+            $event->addUnit('filter', FilterResource::make($event->user->filter));
+            $event->addUnit('has_feedback', !!$event->user->feedback);
         });
 
-        Event::listen(EventResourceEvent::class, function (EventResourceEvent $event) use ($request) {
-            $event->addUnit('author', AuthorResource::make($request->user()->profile));
+        Event::listen(EventResourceEvent::class, function (EventResourceEvent $event) {
+            $event->addUnit('author', AuthorResource::make($event->user->profile));
         });
     }
 }

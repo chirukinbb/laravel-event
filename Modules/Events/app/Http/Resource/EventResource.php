@@ -21,7 +21,7 @@ class EventResource extends JsonResource
      */
     public function toArray($request)
     {
-        $event = new EventResourceEvent();
+        $event = new EventResourceEvent($this->resource);
 
         $event->addUnit('title', $this->resource->title);
         $event->addUnit('category', $this->resource->category->title);
