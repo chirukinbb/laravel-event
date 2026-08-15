@@ -15,9 +15,9 @@ class FilterResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'center' => $this->resource->center,
-            'radius' => $this->resource->radius,
-            'categories' => $this->resource->categories
+            'center' => $this->resource?->center,
+            'radius' => $this->resource?->radius,
+            'categories' => $this->resource?->categories
         ];
     }
 }

@@ -79,7 +79,7 @@ class AuthController extends Controller
 
         return Socialite::driver($provider)
             ->stateless()
-            ->with(['state' => base64_encode($state)])
+            ->with(['state' => base64_encode($state), 'prompt' => 'select_account'])
             ->redirect();
     }
 
