@@ -99,13 +99,13 @@ class UsersServiceProvider extends ModuleServiceProvider
         });
 
         Event::listen(UserResourceEvent::class, function (UserResourceEvent $event) {
-            $event->addUnit('profile', ProfileResource::make($event->user->profile));
-            $event->addUnit('filter', FilterResource::make($event->user->filter));
-            $event->addUnit('has_feedback', !!$event->user->feedback);
+            $event->addUnit('profile', ProfileResource::make($event->resource->profile));
+            $event->addUnit('filter', FilterResource::make($event->resource->filter));
+            $event->addUnit('has_feedback', !!$event->resource->feedback);
         });
 
         Event::listen(EventResourceEvent::class, function (EventResourceEvent $event) {
-            $event->addUnit('author', AuthorResource::make($event->user->profile));
+            $event->addUnit('author', AuthorResource::make($event->resource->user->profile));
         });
     }
 }
