@@ -8,3 +8,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::post('feedback', [\Modules\Users\Http\Controllers\Api\FeedbackController::class, 'store']);
     Route::patch('device', [\Modules\Users\Http\Controllers\Api\DeviceController::class, 'update']);
 });
+
+Route::get('languages', function () {
+    return response()->json(config('users.languages'));
+});

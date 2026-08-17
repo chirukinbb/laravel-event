@@ -753,6 +753,58 @@ required, array, min:1 |
 **Валидация** (встроенная в контроллер):
 | Поле | Правила | |------|---------| | `fcm_token` | required, string |
 
+### 8. Языки (Languages)
+
+#### GET /api/languages
+
+**Назначение**: справочник поддерживаемых языков (ISO-код → название). Используется клиентом для выбора языков в
+профиле (поле `languages`).
+
+**Особенности**:
+
+- Роут **публичный** — токен не требуется.
+- В пути **нет** `/v1` (в отличие от остальных эндпоинтов): полный путь `GET /api/languages`.
+
+| Статус | Условие | Тело ответа |
+|--------|---------|------------|
+| **200** | Успех | Список языков (см. ниже) |
+
+**Ожидаемый ответ** — объект `{ "код": "Название", ... }`, 107 записей:
+
+```json
+{
+  "af": "Afrikaans",
+  "ar": "Arabic",
+  "de": "German",
+  "en": "English",
+  "es": "Spanish",
+  "fr": "French",
+  "hi": "Hindi",
+  "it": "Italian",
+  "ja": "Japanese",
+  "pt": "Portuguese",
+  "ru": "Russian",
+  "uk": "Ukrainian",
+  "zh": "Chinese"
+}
+```
+
+Полный список ISO-кодов (ключи ответа):
+
+```
+af am ar as az be bg bn bo bs ca cs cy da de dv el en eo es et eu fa fi fj fo
+fr fy ga gd gl gu he hi hr ht hu hy id ig is it ja jv ka kk km kn ko ku ky la
+lb lo lt lv mg mi mk ml mn mr ms mt my ne nl no ny or pa pl ps pt qu ro ru rw
+sa sd si sk sl sm sn so sq sr st su sv sw ta te tg th tk tl tr tt ug uk ur uz
+vi xh yi yo zh zu
+```
+
+> ⚠️ **Внимание**: на текущий момент роут реализован как заглушка и возвращает
+> строку `"users.languages"` вместо списка (в `Modules/Users/routes/api.php`
+> в `response()->json(...)` передаётся строка, а не `config('users.languages')`).
+> До исправления бэкенда не полагайтесь на этот эндпоинт — используйте
+> захардкоженный список ISO-кодов на клиенте.
+
 ---
 
 ## Firebase Push-уведомления (FCM)

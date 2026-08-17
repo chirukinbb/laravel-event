@@ -41,7 +41,7 @@ return [
             'provider' => 'users_web',
         ],
         'sanctum' => [
-            'driver' => 'sanctum',
+            'driver' => 'session',
             'provider' => 'users_api',
         ],
     ],
@@ -70,7 +70,7 @@ return [
         ],
         'users_api' => [
             'driver' => 'eloquent',
-            'model' => App\Models\UserApi::class,
+            'model' => App\Models\UserAPI::class,
         ],
     ],
 
