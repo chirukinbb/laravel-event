@@ -49,11 +49,9 @@ class RolePermissionSeeder extends Seeder
         );
         $masterUser->profile()->create([
             'name' => 'Master User',
-            'phone' => '1234567890',
-            'country_phone_code' => '91',
             'languages' => ['en', 'hi'],
             'bio' => 'I am a master user',
-            'country_phone_iso' => 'ua'
+            'avatar_url' => 'https://via.placeholder.com/150'
         ]);
         $masterUser->filter()->create();
         $masterUser->assignRole($masterRole);
@@ -68,11 +66,9 @@ class RolePermissionSeeder extends Seeder
         );
         $regularUser->profile()->create([
             'name' => 'Regular User',
-            'phone' => '1234567890',
-            'country_phone_code' => '91',
             'languages' => ['en', 'hi'],
             'bio' => 'I am a regular user',
-            'country_phone_iso' => 'ua'
+            'avatar_url' => 'https://via.placeholder.com/150'
         ]);
         $regularUser->filter()->create();
         $regularUser->assignRole($userRole);
