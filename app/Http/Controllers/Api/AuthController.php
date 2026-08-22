@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
 use App\Models\UserAPI;
 use App\Services\UserService;
@@ -30,7 +31,7 @@ class AuthController extends Controller
             $user->markEmailAsVerified();
         }
 
-        return UserResource::make($user);
+        return TokenResource::make($user);
     }
 
     public function register(RegisterRequest $request)

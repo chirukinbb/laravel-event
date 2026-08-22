@@ -25,7 +25,7 @@ class ProfileController extends Controller
 
         $validated = $request->validated();
 
-        $user->update($validated);
+        (new \ProfileService($user))->update($validated);
 
         return redirect()->route('users::profile.index')
             ->with('success', 'Profile updated successfully.');

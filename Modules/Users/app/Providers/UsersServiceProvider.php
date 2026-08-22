@@ -105,7 +105,7 @@ class UsersServiceProvider extends ModuleServiceProvider
         });
 
         Event::listen(EventResourceEvent::class, function (EventResourceEvent $event) {
-            $event->addUnit('author', AuthorResource::make($event->resource->user->profile));
+            $event->addUnit('author', ProfileResource::make($event->resource->author->profile));
         });
     }
 }

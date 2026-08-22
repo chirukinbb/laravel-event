@@ -16,11 +16,9 @@ class ProfileResource extends JsonResource
     {
         return [
             'name' => $this->resource?->name,
-            'phone' => $this->resource?->phone,
-            'country_phone_code' => $this->resource?->country_phone_code,
+            'avatar_url' => $this->resource?->avatar_url,
             'languages' => $this->resource?->languages,
             'bio' => $this->resource?->bio,
-            'country_phone_iso' => $this->resource?->country_phone_iso
         ];
     }
 }

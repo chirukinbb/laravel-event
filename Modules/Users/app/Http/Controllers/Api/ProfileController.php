@@ -13,7 +13,7 @@ class ProfileController extends Controller
 
         $validated = $request->validated();
 
-        $user->update($validated);
+        (new \ProfileService($user))->update($validated);
 
         return response()->json([
             'message' => 'Profile updated successfully.'

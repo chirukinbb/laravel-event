@@ -101,6 +101,10 @@ class AuthController extends Controller
             $user = (new UserService())->signup($user->name, $user->email, $password, $source);
         }
 
+        $user->pprofile->update([
+            'avatar_url' => $user->avatar,
+        ]);
+
         if ($source === 'web') {
             Auth::login($user);
             return redirect()->route('dashboard');

@@ -10,9 +10,8 @@ class ProfileRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'country_phone_code' => 'required|string|max:255',
-            'country_phone_iso' => 'required|string|max:255',
+            'avatar' => 'file|image|mimes:webp|max:2048|nullable',
+            'avatar_url' => 'string|max:255|nullable',
             'languages' => 'required|array',
             'bio' => 'required|string'
         ];

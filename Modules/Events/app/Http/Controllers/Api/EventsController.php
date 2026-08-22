@@ -4,19 +4,52 @@ namespace Modules\Events\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Modules\Events\Http\Requests\EventRequest;
+use Modules\Events\Http\Resource\EventCollection;
 use Modules\Events\Http\Resource\EventResource;
-use Modules\Events\Jobs\GeocodeJob;
-use Modules\Events\Jobs\NewEventNotificationJob;
 use Modules\Events\Models\Event;
-use Modules\Events\Services\TagService;
+use Modules\Events\Services\EventService;
 
 class EventsController extends Controller
 {
-    public function index()
+    public function __construct(private EventService $eventService)
     {
-        $events = Event::paginate();
+    }
 
-        return EventResource::collection($events);
+    public function index(\Illuminate\Http\Request $request)
+    {
+        $user = $request->user();
+        $filter = $user->filter;
+
+        $lat = $filter->latitude;
+        $lng = $filter->longitude;
+        $radiusInKm = $filter->radius;
+        $userLanguages = $user->profile?->languages ?? [];
+
+        $events = Event::query()
+            // 1. Фильтр по категориям
+            ->whereIn('category_id', $filter->categories)
+
+            // 2. Фильтр по расстоянию (Haversine formula)
+            ->when($lat && $lng, function ($query) use ($lat, $lng, $radiusInKm) {
+                $query->whereRaw(
+                    '(6371 * acos(cos(radians(?)) * cos(radians(coordinate_lat)) * cos(radians(coordinate_lng) - radians(?)) + sin(radians(?)) * sin(radians(coordinate_lat)))) <= ?',
+                    [$lat, $lng, $lat, $radiusInKm]
+                );
+            })
+
+            // 3. Фильтр по совпадению хотя бы одного языка автора и пользователя
+            ->when(!empty($userLanguages), function ($query) use ($userLanguages) {
+                $query->whereHas('author.profile', function ($profileQuery) use ($userLanguages) {
+                    // MySQL 8.0+: проверяет пересечение массивов JSON
+                    $profileQuery->whereRaw(
+                        'JSON_OVERLAPS(languages, ?)',
+                        [json_encode(array_values($userLanguages))]
+                    );
+                });
+            })
+            ->paginate();
+
+        return EventCollection::make($events);
     }
 
     public function show(Event $event)
@@ -26,25 +59,7 @@ class EventsController extends Controller
 
     public function store(EventRequest $request)
     {
-        $eventModel = Event::getModel();
-
-        $eventModel->title = $request->title;
-        $eventModel->description = $request->description;
-        $eventModel->thumbnail_url = $request->thumbnail->storePublicly('public/events/thumbnails');
-        $eventModel->category_id = $request->category_id;
-        $eventModel->planing_time = $request->planing_time;
-        $eventModel->user_id = $request->user_id;
-        $eventModel->slots = $request->slots;
-        $eventModel->address = $request->address;
-
-        $eventModel->save();
-
-        GeocodeJob::dispatch($eventModel->id);
-        NewEventNotificationJob::dispatch($eventModel->id);
-
-        $tagService = new TagService($eventModel);
-
-        $tagService->action($request->tags);
+        $this->eventService->store($request->validated());
 
         return response()->json([
             'message' => 'Event created successfully'
@@ -53,23 +68,7 @@ class EventsController extends Controller
 
     public function update(EventRequest $request, Event $event)
     {
-        $event->title = $request->title;
-        $event->description = $request->description;
-        $event->category_id = $request->category_id;
-        $event->planing_time = $request->planing_time;
-        $event->user_id = $request->user_id;
-        $event->slots = $request->slots;
-        $event->address = $request->address;
-
-        if ($request->thumbnail) {
-            $event->thumbnail_url = $request->thumbnail->storePublicly('public/events/thumbnails');
-        }
-
-        $event->save();
-
-        $tagService = new TagService($event);
-
-        $tagService->action($request->tags);
+        $this->eventService->update($request->validated(), $event);
 
         return response()->json([
             'message' => 'Event updated successfully'

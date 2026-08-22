@@ -6,15 +6,17 @@ namespace Modules\Events\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Modules\Events\Http\Requests\EventRequest;
-use Modules\Events\Jobs\GeocodeJob;
-use Modules\Events\Jobs\NewEventNotificationJob;
 use Modules\Events\Models\Category;
 use Modules\Events\Models\Event;
 use Modules\Events\Models\Tag;
-use Modules\Events\Services\TagService;
+use Modules\Events\Services\EventService;
 
 class EventsController extends Controller
 {
+    public function __construct(private EventService $eventService)
+    {
+    }
+
     public function index()
     {
         $events = Event::paginate(15);
@@ -37,25 +39,7 @@ class EventsController extends Controller
 
     public function store(EventRequest $request)
     {
-        $eventModel = Event::getModel();
-
-        $eventModel->title = $request->title;
-        $eventModel->description = $request->description;
-        $eventModel->thumbnail_url = $request->thumbnail->storePublicly('public/events/thumbnails');
-        $eventModel->category_id = $request->category_id;
-        $eventModel->planing_time = $request->planing_time;
-        $eventModel->user_id = $request->user_id;
-        $eventModel->slots = $request->slots;
-        $eventModel->address = $request->address;
-
-        $eventModel->save();
-
-        GeocodeJob::dispatch($eventModel->id);
-        NewEventNotificationJob::dispatch($eventModel->id);
-
-        $tagService = new TagService($eventModel);
-
-        $tagService->action($request->tags);
+        $this->eventService->store($request->validated());
 
         return redirect()->route('events::index')->with('success', 'Event created!');
     }
@@ -88,25 +72,9 @@ class EventsController extends Controller
 
     public function update(EventRequest $request, $id)
     {
-        $eventModel = Event::find($id);
+        $event = Event::find($id);
 
-        $eventModel->title = $request->title;
-        $eventModel->description = $request->description;
-        $eventModel->category_id = $request->category_id;
-        $eventModel->planing_time = $request->planing_time;
-        $eventModel->user_id = $request->user_id;
-        $eventModel->slots = $request->slots;
-        $eventModel->address = $request->address;
-
-        if ($request->thumbnail) {
-            $eventModel->thumbnail_url = $request->thumbnail->storePublicly('public/events/thumbnails');
-        }
-
-        $eventModel->save();
-
-        $tagService = new TagService($eventModel);
-
-        $tagService->action($request->tags);
+        $this->eventService->update($request->validated(), $event);
 
         return redirect()->route('events::index')->with('success', 'Event updated!');
     }

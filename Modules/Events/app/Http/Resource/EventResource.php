@@ -23,6 +23,7 @@ class EventResource extends JsonResource
     {
         $event = new EventResourceEvent($this->resource);
 
+        $event->addUnit('id', $this->resource->id);
         $event->addUnit('title', $this->resource->title);
         $event->addUnit('category', $this->resource->category->title);
         $event->addUnit('thumbnail_url', asset($this->resource->thumbnail_url));

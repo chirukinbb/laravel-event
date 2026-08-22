@@ -12,9 +12,7 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('user_id');
             $table->string('name');
-            $table->string('country_phone_iso')->nullable();
-            $table->string('country_phone_code')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('avatar_url')->nullable();
             $table->text('languages')->nullable();
             $table->text('bio')->nullable();
 

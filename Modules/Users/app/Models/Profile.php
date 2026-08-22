@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Profile extends Model
 {
-    protected $fillable = ['user_id', 'name', 'phone', 'country_phone_code', 'languages', 'bio', 'country_phone_iso'];
+    protected $fillable = ['user_id', 'name', 'languages', 'bio', 'avatar_url'];
 
     protected $casts = [
         'languages' => 'array',

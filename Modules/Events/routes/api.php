@@ -7,11 +7,11 @@ use Modules\Events\Http\Controllers\Api\MemberController;
 use Modules\Events\Http\Middlewares\MemberMiddleware;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::get('events', [EventsController::class, 'index'])->middleware('role.permission:' . PermissionEnum::API_VIEW_EVENT_LIST->value);
+    Route::get('events', [EventsController::class, 'index'])->middleware('ability:' . PermissionEnum::API_VIEW_EVENT_LIST->value)->middleware(\Modules\Events\Middlewares\HasFilterMiddleware::class);
 
     Route::prefix('event/{event}')->middleware(\Modules\Events\Http\Middlewares\EventOwnerMiddleware::class)->group(function () {
-        Route::put('/', [EventsController::class, 'update'])->middleware('role.permission:' . PermissionEnum::API_EDIT_EVENT->value);
-        Route::delete('/', [EventsController::class, 'destroy'])->middleware('role.permission:' . PermissionEnum::API_CREATE_EVENT->value);
+        Route::put('/', [EventsController::class, 'update'])->middleware('ability:' . PermissionEnum::API_EDIT_EVENT->value);
+        Route::delete('/', [EventsController::class, 'destroy'])->middleware('ability:' . PermissionEnum::API_CREATE_EVENT->value);
 
         Route::post('subscribe', [MemberController::class, 'create'])->middleware(['auth:sanctum', \Modules\Events\Http\Middlewares\ReservableMiddleware::class]);
 
@@ -21,8 +21,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         });
     });
 
-    Route::post('events', [EventsController::class, 'store'])->middleware('role.permission:' . PermissionEnum::API_CREATE_EVENT->value);
-    Route::get('event/{event}', [EventsController::class, 'show'])->middleware('role.permission:' . PermissionEnum::API_VIEW_EVENT->value);
+    Route::post('events', [EventsController::class, 'store'])->middleware('ability:' . PermissionEnum::API_CREATE_EVENT->value);
+    Route::get('event/{event}', [EventsController::class, 'show'])->middleware('ability:' . PermissionEnum::API_VIEW_EVENT->value);
 
-    Route::get('categories', [\Modules\Events\Http\Controllers\Api\CategoryController::class, 'index']);
+    Route::get('categories', [\Modules\Events\Http\Controllers\Api\CategoryController::class, 'index'])->middleware(\Modules\Events\Middlewares\HasFilterMiddleware::class);
 });
