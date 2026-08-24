@@ -23,6 +23,6 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
     Route::post('events', [EventsController::class, 'store'])->middleware('ability:' . PermissionEnum::API_CREATE_EVENT->value);
     Route::get('event/{event}', [EventsController::class, 'show'])->middleware('ability:' . PermissionEnum::API_VIEW_EVENT->value);
-
-    Route::get('categories', [\Modules\Events\Http\Controllers\Api\CategoryController::class, 'index'])->middleware(\Modules\Events\Middlewares\HasFilterMiddleware::class);
 });
+
+Route::get('v1/categories', [\Modules\Events\Http\Controllers\Api\CategoryController::class, 'index']);

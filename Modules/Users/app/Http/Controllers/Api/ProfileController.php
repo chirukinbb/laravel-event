@@ -4,6 +4,7 @@ namespace Modules\Users\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Modules\Users\Http\Requests\ProfileRequest;
+use Modules\Users\Http\Resources\ProfileResource;
 
 class ProfileController extends Controller
 {
@@ -15,8 +16,6 @@ class ProfileController extends Controller
 
         (new \ProfileService($user))->update($validated);
 
-        return response()->json([
-            'message' => 'Profile updated successfully.'
-        ]);
+        return ProfileResource::make($user->profile);
     }
 }

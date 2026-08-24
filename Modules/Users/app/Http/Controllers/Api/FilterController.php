@@ -5,6 +5,7 @@ namespace Modules\Users\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Modules\Events\Repositories\GeoRepository;
 use Modules\Users\Http\Requests\FilterRequest;
+use Modules\Users\Http\Resources\FilterResource;
 
 class FilterController extends Controller
 {
@@ -20,8 +21,6 @@ class FilterController extends Controller
             'center' => $tomtom->getPosition()
         ]);
 
-        return response()->json([
-            'message' => 'Filter updated successfully.'
-        ]);
+        return FilterResource::make($request->user()->filter);
     }
 }

@@ -101,7 +101,7 @@ class AuthController extends Controller
             $user = (new UserService())->signup($user->name, $user->email, $password, $source);
         }
 
-        $user->pprofile->update([
+        $user->profile->update([
             'avatar_url' => $user->avatar,
         ]);
 

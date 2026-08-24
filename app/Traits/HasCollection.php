@@ -16,7 +16,7 @@ trait HasCollection
 
     public function getUnits(): array
     {
-        return $this->collection->map(fn(\UnitEnum $unit) => $unit->name)->toArray();
+        return $this->collection->map(fn(\UnitEnum $unit) => $unit->value)->toArray();
     }
 
     public function addUnits(array $units)
