@@ -5,6 +5,7 @@ namespace Modules\Users\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Modules\Users\Http\Requests\ProfileRequest;
 use Modules\Users\Http\Resources\ProfileResource;
+use Modules\Users\Services\ProfileService;
 
 class ProfileController extends Controller
 {
@@ -14,7 +15,7 @@ class ProfileController extends Controller
 
         $validated = $request->validated();
 
-        (new \ProfileService($user))->update($validated);
+        (new ProfileService($user))->update($validated);
 
         return ProfileResource::make($user->profile);
     }

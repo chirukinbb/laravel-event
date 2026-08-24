@@ -1,5 +1,7 @@
 <?php
 
+namespace Modules\Users\Services;
+
 class ProfileService
 {
     public function __construct(private \App\Models\User|\App\Models\UserAPI $user)

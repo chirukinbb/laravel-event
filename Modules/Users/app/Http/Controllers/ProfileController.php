@@ -4,6 +4,7 @@ namespace Modules\Users\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Modules\Users\Http\Requests\ProfileRequest;
+use Modules\Users\Services\ProfileService;
 
 class ProfileController extends Controller
 {
@@ -25,7 +26,7 @@ class ProfileController extends Controller
 
         $validated = $request->validated();
 
-        (new \ProfileService($user))->update($validated);
+        (new ProfileService($user))->update($validated);
 
         return redirect()->route('users::profile.index')
             ->with('success', 'Profile updated successfully.');
