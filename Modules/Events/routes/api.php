@@ -6,7 +6,11 @@ use Modules\Events\Http\Controllers\Api\MemberController;
 use Modules\Events\Http\Middlewares\MemberMiddleware;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::get('events', [EventsController::class, 'index'])->middleware(\Modules\Events\Middlewares\HasFilterMiddleware::class);
+    Route::middleware(\Modules\Events\Middlewares\HasFilterMiddleware::class)->prefix('events')->group(function () {
+        Route::get('', [EventsController::class, 'index']);
+        Route::get('organizing', [EventsController::class, 'organizing']);
+        Route::get('attending', [EventsController::class, 'attending']);
+    });
 
     Route::prefix('event/{event}')->middleware(\Modules\Events\Http\Middlewares\EventOwnerMiddleware::class)->group(function () {
         Route::middleware(\Modules\Events\Http\Middlewares\EventOwnerMiddleware::class)->group(function () {

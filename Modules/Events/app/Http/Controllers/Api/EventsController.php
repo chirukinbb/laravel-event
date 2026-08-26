@@ -3,6 +3,7 @@
 namespace Modules\Events\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Modules\Events\Http\Requests\EventRequest;
 use Modules\Events\Http\Resource\EventCollection;
 use Modules\Events\Http\Resource\EventResource;
@@ -29,6 +30,9 @@ class EventsController extends Controller
             // 1. Фильтр по категориям
             ->whereIn('category_id', $filter->categories)
             ->whereNot('user_id', $user->id)
+            ->whereRelation('members', function ($query) use ($user) {
+                $query->whereNot('user_id', $user->id);
+            })
 
             // 2. Фильтр по расстоянию (Haversine formula)
             ->when($lat && $lng, function ($query) use ($lat, $lng, $radiusInKm) {
@@ -48,6 +52,28 @@ class EventsController extends Controller
                     );
                 });
             })
+            ->with(['members', 'category', 'tags'])
+            ->latest()
+            ->paginate();
+
+        return EventCollection::make($events);
+    }
+
+    public function organizing(Request $request)
+    {
+        $events = Event::where('user_id', $request->user()->id)
+            ->with(['members', 'category', 'tags'])
+            ->latest()
+            ->paginate();
+
+        return EventCollection::make($events);
+    }
+
+    public function attending(Request $request)
+    {
+        $events = Event::whereRelation('members', 'user_id', $request->user()->id)
+            ->with(['members', 'category', 'tags'])
+            ->latest()
             ->paginate();
 
         return EventCollection::make($events);
