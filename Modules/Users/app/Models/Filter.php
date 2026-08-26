@@ -14,6 +14,8 @@ class Filter extends Model
     protected $casts = [
         'radius' => 'integer',
         'categories' => 'array',
+        'center' => 'array',
+
     ];
 
     public function user(): BelongsTo
