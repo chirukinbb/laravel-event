@@ -20,14 +20,15 @@ class EventsController extends Controller
         $user = $request->user();
         $filter = $user->filter;
 
-        $lat = $filter->latitude;
-        $lng = $filter->longitude;
+        $lat = $filter->center[0];
+        $lng = $filter->center[1];
         $radiusInKm = $filter->radius;
         $userLanguages = $user->profile?->languages ?? [];
 
         $events = Event::query()
             // 1. Фильтр по категориям
             ->whereIn('category_id', $filter->categories)
+            ->whereNot('user_id', $user->id)
 
             // 2. Фильтр по расстоянию (Haversine formula)
             ->when($lat && $lng, function ($query) use ($lat, $lng, $radiusInKm) {

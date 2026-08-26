@@ -28,3 +28,4 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 });
 
 Route::get('v1/categories', [\Modules\Events\Http\Controllers\Api\CategoryController::class, 'index']);
+Route::get('v1/tags', [\Modules\Events\Http\Controllers\Api\CategoryController::class, 'tags']);

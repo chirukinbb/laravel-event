@@ -15,6 +15,6 @@ class ProfileService
             unset($data['avatar']);
         }
 
-        $this->user->update($data);
+        $this->user->profile->update($data);
     }
 }

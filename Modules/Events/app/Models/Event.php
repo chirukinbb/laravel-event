@@ -27,6 +27,8 @@ class Event extends Model
         'address'
     ];
 
+    protected $casts = ['planing_time' => 'datetime', 'is_happened' => 'boolean'];
+
     public function category()
     {
         return $this->belongsTo(Category::class);

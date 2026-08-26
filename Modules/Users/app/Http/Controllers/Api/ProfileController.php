@@ -11,7 +11,7 @@ class ProfileController extends Controller
 {
     public function update(ProfileRequest $request)
     {
-        $user = auth()->user()->with('profile')->first();
+        $user = $request->user();
 
         $validated = $request->validated();
 

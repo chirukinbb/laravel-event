@@ -274,9 +274,8 @@ Authorization: Bearer 1|abc123def456...
     "filter": {
         "center": null,
         "radius": null,
-        "categories": null
-    },
-    "has_feedback": false
+      "categories": null
+    }
 }
 ```
 
@@ -328,18 +327,38 @@ Authorization: Bearer 1|abc123def456...
         "thumbnail_url": "...",
         "description": "...",
         "coordinate_lat": "55.7558",
-        "coordinate_lng": "37.6173",
-        "country": "Russia",
-        "planing_time": 1720000000,
-        "slots": 10,
-        "address": "Москва, ул. Пушкина, д. 1",
-        "reserved": 3,
-        "author": {
+      "coordinate_lng": "37.6173",
+      "country": "Russia",
+      "planing_time": 1720000000,
+      "slots": 10,
+      "reserved": 3,
+      "author": {
+        "name": "John Doe",
+        "avatar_url": null,
+        "languages": [
+          "en",
+          "ru"
+        ],
+        "bio": "О себе"
+      },
+      "member": null,
+      "members": [
+        {
+          "id": 7,
+          "profile": {
             "name": "John Doe",
             "avatar_url": null,
-            "languages": ["en", "ru"],
+            "languages": [
+              "en",
+              "ru"
+            ],
             "bio": "О себе"
+          }
         }
+      ],
+      "tags": [
+        "tag_name"
+      ]
     }
 }
 ```
@@ -482,20 +501,19 @@ Laravel возвращает ошибки валидации в формате:
 
 **Валидация** (EventRequest):
 
-| Поле | Правила |
-|------|---------|
-| `title` | required, string |
-| `description` | required, string |
-| `thumbnail` | required_without:thumb_path, file, mimes:webp, max:1024 |
-| `thumb_path` | required_without:thumbnail, string |
-| `address` | required, string |
-| `category_id` | required, numeric |
-| `slots` | numeric |
-| `user_id` | numeric, exists:users,id |
-| `tags` | array |
-| `planing_time` | required, date_format:d/m/Y H:i |
+| Поле            | Правила                                                |
+|-----------------|--------------------------------------------------------|
+| `title`         | required, string                                       |
+| `description`   | required, string                                       |
+| `thumbnail`     | required_without:thumb_path, file, mimes:webp, max:1024 |
+| `thumbnail_url` | required_without:thumbnail, string                     |
+| `address`       | required, array                                       |
+| `category_id`   | required, numeric                                      |
+| `slots`         | numeric                                                |
+| `user_id`       | numeric, exists:users,id                               |
+| `tags`          | array                                                  |
+| `planing_time`  | required, date_format:Unix timestamp                   |
 
-> 📌 `thumbnail` и `thumb_path` — нужно ОДНО из двух
 
 **Права**: `api create event`
 
@@ -694,7 +712,10 @@ Laravel возвращает ошибки валидации в формате:
 
 ```json
 {
-  "address": "Москва, Красная площадь",
+  "address": [
+    "center_lat",
+    "center_lng"
+  ],
   "radius": 50,
   "categories": [
     1,
@@ -708,7 +729,10 @@ Laravel возвращает ошибки валидации в формате:
 
 ```json
 {
-  "address": "Москва, Красная площадь",
+  "address": [
+    "center_lat",
+    "center_lng"
+  ],
   "radius": 50,
   "categories": [
     1,
@@ -728,7 +752,7 @@ Laravel возвращает ошибки валидации в формате:
 
 | Поле | Правила |
 |------|---------|
-| `address` | required, string |
+| `address` | required, array |
 | `radius` | required, numeric |
 | `categories` | required, array, min:1 |
 

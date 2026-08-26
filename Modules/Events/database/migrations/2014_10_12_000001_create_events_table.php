@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->string('coordinate_lat')->nullable();
             $table->string('coordinate_lng')->nullable();
             $table->string('country_iso')->nullable();
-            $table->string('planing_time');
+            $table->timestamp('planing_time');
             $table->integer('slots');
             $table->integer('is_happened')->nullable();
             $table->softDeletes();

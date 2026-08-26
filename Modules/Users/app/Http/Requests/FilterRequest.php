@@ -9,7 +9,7 @@ class FilterRequest extends FormRequest
     public function rules()
     {
         return [
-            'address' => 'string|required',
+            'center' => 'array|required',
             'radius' => 'numeric|required',
             'categories' => 'array|required|min:1',
         ];

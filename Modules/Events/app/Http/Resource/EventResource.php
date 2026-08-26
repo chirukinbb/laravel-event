@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Events\Events\EventResourceEvent;
 use Modules\Events\Models\Event;
+use Modules\Events\Models\Member;
+use Modules\Events\Models\Tag;
+use Modules\Users\Http\Resources\ProfileResource;
 
 class EventResource extends JsonResource
 {
@@ -22,6 +25,7 @@ class EventResource extends JsonResource
     public function toArray($request)
     {
         $event = new EventResourceEvent($this->resource);
+        $member = $this->resource->members->firstWhere('user_id', $request->user()?->id);
 
         $event->addUnit('id', $this->resource->id);
         $event->addUnit('title', $this->resource->title);
@@ -33,11 +37,29 @@ class EventResource extends JsonResource
         $event->addUnit('country', config('events.countries.' . $this->resource->country_iso, $this->resource->country_iso));
         $event->addUnit('planing_time', Carbon::parse($this->resource->planing_time)->timestamp);
         $event->addUnit('slots', $this->resource->slots);
-        $event->addUnit('address', $this->resource->address);
+        $event->addUnit('tags', $this->resource->tags->map(fn(Tag $tag) => $tag->name));
         $event->addUnit('reserved', $this->resource->members->count());
+        $event->addUnit('member', $member?->id);
+        $event->addUnit('members', $this->getMembers($request->user()->id));
 
         event($event);
 
         return $event->getUnits();
+    }
+
+    private function getMembers(int $id): array
+    {
+        $members = collect();
+
+        if ($id === $this->resource->user_id) {
+            $this->resource->members->map(function (Member $member) use (&$members) {
+                $members->push([
+                    'id' => $member->id,
+                    'profile' => ProfileResource::make($member->user->profile)
+                ]);
+            });
+        }
+
+        return $members->toArray();
     }
 }

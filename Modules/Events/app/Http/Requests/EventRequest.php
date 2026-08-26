@@ -24,13 +24,13 @@ class EventRequest extends FormRequest
             'title' => 'required|string',
             'description' => 'required|string',
             'thumbnail' => 'required_without:thumb_path|file|mimes:webp|max:1024',
-            'thumb_path' => 'required_without:thumbnail|string',
-            'address' => 'required|string',
+            'thumbnail_url' => 'required_without:thumbnail|string',
+            'address' => 'required|array',
             'category_id' => 'required|numeric',
             'user_id' => 'numeric|exists:users,id',
             'slots' => 'numeric',
             'tags' => 'array',
-            'planing_time' => 'required|date_format:d/m/Y H:i'
+            'planing_time' => 'required|date_format:U'
         ];
     }
 }

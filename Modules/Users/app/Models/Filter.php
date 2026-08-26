@@ -12,7 +12,6 @@ class Filter extends Model
     protected $fillable = ['user_id', 'center', 'radius', 'categories'];
 
     protected $casts = [
-        'center' => 'array',
         'radius' => 'integer',
         'categories' => 'array',
     ];
