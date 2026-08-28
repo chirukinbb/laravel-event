@@ -79,7 +79,7 @@ class EventsController extends Controller
             ->latest()
             ->paginate();
 
-        return EventCollection::make($events);
+        return EventCollection::collection($events);
     }
 
     public function show(Event $event)

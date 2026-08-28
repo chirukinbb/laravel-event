@@ -28,7 +28,7 @@ class EventResource extends JsonResource
 
         $resource->loadMissing($relations);
 
-        if (!isset($resource->members_count)) {
+        if (is_null($resource->getAttributeValue('members_count'))) {
             $resource->loadCount('members');
         }
 
