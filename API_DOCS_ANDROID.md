@@ -298,21 +298,7 @@ Authorization: Bearer 1|abc123def456...
             "reserved": 3,
             "planing_time": 1720000000
         }
-    ],
-    "links": {
-        "first": "http://<HOST>:8080/api/v1/events?page=1",
-        "last": "http://<HOST>:8080/api/v1/events?page=1",
-        "prev": null,
-        "next": null
-    },
-    "meta": {
-        "current_page": 1,
-        "from": 1,
-        "last_page": 1,
-        "per_page": 15,
-        "to": 3,
-        "total": 3
-    }
+    ]
 }
 ```
 
@@ -341,7 +327,7 @@ Authorization: Bearer 1|abc123def456...
         ],
         "bio": "О себе"
       },
-      "member": null,
+      "member": 3,
       "members": [
         {
           "id": 7,
@@ -582,8 +568,50 @@ Laravel возвращает ошибки валидации в формате:
 
 **Middleware**: ReservableMiddleware — проверяет `slots > members.count()`
 
-> ⚠️ Роут вложен в группу `EventOwnerMiddleware` (см. [известные проблемы](#примечания-и-известные-проблемы)).
-
+```json
+{
+  "data": {
+    "id": 1,
+    "title": "...",
+    "category": "Спорт",
+    "thumbnail_url": "...",
+    "description": "...",
+    "coordinate_lat": "55.7558",
+    "coordinate_lng": "37.6173",
+    "country": "Russia",
+    "planing_time": 1720000000,
+    "slots": 10,
+    "reserved": 3,
+    "author": {
+      "name": "John Doe",
+      "avatar_url": null,
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "bio": "О себе"
+    },
+    "member": 3,
+    "members": [
+      {
+        "id": 7,
+        "profile": {
+          "name": "John Doe",
+          "avatar_url": null,
+          "languages": [
+            "en",
+            "ru"
+          ],
+          "bio": "О себе"
+        }
+      }
+    ],
+    "tags": [
+      "tag_name"
+    ]
+  }
+}
+```
 ---
 
 #### PATCH /api/v1/event/{event}/member/{member}
@@ -633,6 +661,50 @@ Laravel возвращает ошибки валидации в формате:
 
 **Middleware**: MemberMiddleware
 
+```json
+{
+  "data": {
+    "id": 1,
+    "title": "...",
+    "category": "Спорт",
+    "thumbnail_url": "...",
+    "description": "...",
+    "coordinate_lat": "55.7558",
+    "coordinate_lng": "37.6173",
+    "country": "Russia",
+    "planing_time": 1720000000,
+    "slots": 10,
+    "reserved": 3,
+    "author": {
+      "name": "John Doe",
+      "avatar_url": null,
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "bio": "О себе"
+    },
+    "member": 3,
+    "members": [
+      {
+        "id": 7,
+        "profile": {
+          "name": "John Doe",
+          "avatar_url": null,
+          "languages": [
+            "en",
+            "ru"
+          ],
+          "bio": "О себе"
+        }
+      }
+    ],
+    "tags": [
+      "tag_name"
+    ]
+  }
+}
+```
 ---
 
 ### 3. Категории

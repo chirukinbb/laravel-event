@@ -52,7 +52,8 @@ class EventsController extends Controller
                     );
                 });
             })
-            ->with(['members', 'category', 'tags'])
+            ->with(['category', 'tags'])
+            ->withCount('members')
             ->latest()
             ->paginate();
 
@@ -63,6 +64,7 @@ class EventsController extends Controller
     {
         $events = Event::where('user_id', $request->user()->id)
             ->with(['members', 'category', 'tags'])
+            ->withCount('members')
             ->latest()
             ->paginate();
 
@@ -72,7 +74,8 @@ class EventsController extends Controller
     public function attending(Request $request)
     {
         $events = Event::whereRelation('members', 'user_id', $request->user()->id)
-            ->with(['members', 'category', 'tags'])
+            ->with(['category', 'tags'])
+            ->withCount('members')
             ->latest()
             ->paginate();
 
@@ -86,20 +89,16 @@ class EventsController extends Controller
 
     public function store(EventRequest $request)
     {
-        $this->eventService->store($request->validated());
+        $event = $this->eventService->store($request->validated());
 
-        return response()->json([
-            'message' => 'Event created successfully'
-        ], 201);
+        return EventResource::make($event);
     }
 
     public function update(EventRequest $request, Event $event)
     {
         $this->eventService->update($request->validated(), $event);
 
-        return response()->json([
-            'message' => 'Event updated successfully'
-        ], 200);
+        return EventResource::make($event);
     }
 
     public function destroy(Event $event)

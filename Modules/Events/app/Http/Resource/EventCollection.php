@@ -2,6 +2,7 @@
 
 namespace Modules\Events\Http\Resource;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -24,7 +25,7 @@ class EventCollection extends ResourceCollection
                     'description' => $event->description,
                     'slots' => $event->slots,
                     'reserved' => $event->reserved,
-                    'planing_time' => $event->planing_time
+                    'planing_time' => Carbon::parse($event->planing_time)->timestamp,
                 ];
             }),
         ];

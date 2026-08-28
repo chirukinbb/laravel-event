@@ -21,6 +21,8 @@ class EventService
         $tagService = new TagService($event);
 
         $tagService->action($event->tags);
+
+        return $event;
     }
 
     public function update(array $data, Event $event)
@@ -40,5 +42,7 @@ class EventService
         $tagService = new TagService($event);
 
         $tagService->action($event->tags);
+
+        return $event;
     }
 }

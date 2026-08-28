@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->boolean('is_happened')->default(false);
             $table->text('comment')->nullable();
             $table->string('mark')->nullable();
+            $table->softDeletes();
 
             $table->timestamps();
         });

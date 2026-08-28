@@ -18,6 +18,23 @@ class EventResource extends JsonResource
      */
     public $resource;
 
+    public function __construct($resource)
+    {
+        $relations = ['category', 'tags'];
+
+        if (request()->user()?->id === $resource->user_id) {
+            $relations[] = 'members';
+        }
+
+        $resource->loadMissing($relations);
+
+        if (!isset($resource->members_count)) {
+            $resource->loadCount('members');
+        }
+
+        parent::__construct($resource);
+    }
+
     /**
      * @param Request $request
      * @return array
@@ -38,27 +55,32 @@ class EventResource extends JsonResource
         $event->addUnit('planing_time', Carbon::parse($this->resource->planing_time)->timestamp);
         $event->addUnit('slots', $this->resource->slots);
         $event->addUnit('tags', $this->resource->tags->map(fn(Tag $tag) => $tag->name));
-        $event->addUnit('reserved', $this->resource->members->count());
-        $event->addUnit('member', $member?->id);
-        $event->addUnit('members', $this->getMembers($request->user()->id));
+        $event->addUnit('reserved', $this->resource->members_count);
+
+        if ($member?->id) {
+            $event->addUnit('member', $member?->id);
+        }
+
+        if ($request->user()->id === $this->resource->user_id) {
+            $event->addUnit('members', $this->getMembers());
+        }
 
         event($event);
 
         return $event->getUnits();
     }
 
-    private function getMembers(int $id): array
+    private function getMembers(): array
     {
         $members = collect();
 
-        if ($id === $this->resource->user_id) {
-            $this->resource->members->map(function (Member $member) use (&$members) {
-                $members->push([
-                    'id' => $member->id,
-                    'profile' => ProfileResource::make($member->user->profile)
-                ]);
-            });
-        }
+        $this->resource->members->map(function (Member $member) use (&$members) {
+            $members->push([
+                'id' => $member->id,
+                'profile' => ProfileResource::make($member->user->profile)
+            ]);
+        });
+
 
         return $members->toArray();
     }

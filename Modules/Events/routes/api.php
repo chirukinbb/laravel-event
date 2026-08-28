@@ -1,19 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Events\Http\Controllers\Api\CategoryController;
 use Modules\Events\Http\Controllers\Api\EventsController;
 use Modules\Events\Http\Controllers\Api\MemberController;
+use Modules\Events\Http\Middlewares\EventOwnerMiddleware;
 use Modules\Events\Http\Middlewares\MemberMiddleware;
+use Modules\Events\Http\Middlewares\ReservableMiddleware;
+use Modules\Events\Middlewares\HasFilterMiddleware;
+use Modules\Events\Middlewares\MemberOwnerMiddleware;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::middleware(\Modules\Events\Middlewares\HasFilterMiddleware::class)->prefix('events')->group(function () {
+    Route::middleware(HasFilterMiddleware::class)->prefix('events')->group(function () {
         Route::get('', [EventsController::class, 'index']);
         Route::get('organizing', [EventsController::class, 'organizing']);
         Route::get('attending', [EventsController::class, 'attending']);
     });
 
-    Route::prefix('event/{event}')->middleware(\Modules\Events\Http\Middlewares\EventOwnerMiddleware::class)->group(function () {
-        Route::middleware(\Modules\Events\Http\Middlewares\EventOwnerMiddleware::class)->group(function () {
+    Route::prefix('event/{event}')->group(function () {
+        Route::middleware(EventOwnerMiddleware::class)->group(function () {
             Route::put('/', [EventsController::class, 'update']);
             Route::delete('/', [EventsController::class, 'destroy']);
 
@@ -23,13 +28,13 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
             });
         });
 
-        Route::post('subscribe', [MemberController::class, 'create'])->middleware([\Modules\Events\Http\Middlewares\ReservableMiddleware::class]);
-        Route::post('unsubscribe', [MemberController::class, 'destroy'])->middleware([\Modules\Events\Http\Middlewares\ReservableMiddleware::class]);
+        Route::post('subscribe', [MemberController::class, 'create'])->middleware(ReservableMiddleware::class);
+        Route::post('unsubscribe', [MemberController::class, 'destroy'])->middleware(MemberOwnerMiddleware::class);
     });
 
     Route::post('events', [EventsController::class, 'store']);
     Route::get('event/{event}', [EventsController::class, 'show']);
 });
 
-Route::get('v1/categories', [\Modules\Events\Http\Controllers\Api\CategoryController::class, 'index']);
-Route::get('v1/tags', [\Modules\Events\Http\Controllers\Api\CategoryController::class, 'tags']);
+Route::get('v1/categories', [CategoryController::class, 'index']);
+Route::get('v1/tags', [CategoryController::class, 'tags']);
