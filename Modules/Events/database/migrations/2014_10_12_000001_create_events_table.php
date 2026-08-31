@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('category_id');
             $table->string('title');
             $table->string('thumbnail_url');
-            $table->string('address');
             $table->text('description');
             $table->string('coordinate_lat')->nullable();
             $table->string('coordinate_lng')->nullable();

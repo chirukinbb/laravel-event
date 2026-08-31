@@ -23,8 +23,7 @@ class Event extends Model
         'country_iso',
         'planing_time',
         'is_happened',
-        'slots',
-        'address'
+        'slots'
     ];
 
     protected $casts = ['planing_time' => 'datetime', 'is_happened' => 'boolean'];

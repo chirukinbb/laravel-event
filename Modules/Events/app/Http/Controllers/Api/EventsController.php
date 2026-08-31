@@ -57,7 +57,7 @@ class EventsController extends Controller
             ->latest()
             ->paginate();
 
-        return EventCollection::make($events);
+        return EventCollection::collection($events);
     }
 
     public function organizing(Request $request)
@@ -68,7 +68,7 @@ class EventsController extends Controller
             ->latest()
             ->paginate();
 
-        return EventCollection::make($events);
+        return EventCollection::collection($events);
     }
 
     public function attending(Request $request)
