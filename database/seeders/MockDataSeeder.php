@@ -300,8 +300,7 @@ class MockDataSeeder extends Seeder
                     'coordinate_lng' => $eventData['coordinate_lng'],
                     'country_iso' => $eventData['country_iso'],
                     'planing_time' => Carbon::now()->addDays($eventData['planing_days'])->toDateTimeString(),
-                    'slots' => $eventData['slots'],
-                    'address' => $eventData['address'],
+                    'slots' => $eventData['slots']
                 ]
             );
 
