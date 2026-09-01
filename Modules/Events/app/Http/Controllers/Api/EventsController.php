@@ -30,8 +30,8 @@ class EventsController extends Controller
             // 1. Фильтр по категориям
             ->whereIn('category_id', $filter->categories)
             ->whereNot('user_id', $user->id)
-            ->whereRelation('members', function ($query) use ($user) {
-                $query->whereNot('user_id', $user->id);
+            ->whereDoesntHave('members', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
             })
 
             // 2. Фильтр по расстоянию (Haversine formula)

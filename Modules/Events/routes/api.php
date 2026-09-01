@@ -29,7 +29,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         });
 
         Route::post('subscribe', [MemberController::class, 'create'])->middleware(ReservableMiddleware::class);
-        Route::post('unsubscribe', [MemberController::class, 'destroy'])->middleware(TimeMiddleware::class);
+        Route::delete('unsubscribe', [MemberController::class, 'destroy'])->middleware(TimeMiddleware::class);
     });
 
     Route::post('events', [EventsController::class, 'store']);
