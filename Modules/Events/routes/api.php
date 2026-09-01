@@ -8,7 +8,7 @@ use Modules\Events\Http\Middlewares\EventOwnerMiddleware;
 use Modules\Events\Http\Middlewares\MemberMiddleware;
 use Modules\Events\Http\Middlewares\ReservableMiddleware;
 use Modules\Events\Middlewares\HasFilterMiddleware;
-use Modules\Events\Middlewares\MemberOwnerMiddleware;
+use Modules\Events\Middlewares\TimeMiddleware;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::middleware(HasFilterMiddleware::class)->prefix('events')->group(function () {
@@ -21,15 +21,15 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::middleware(EventOwnerMiddleware::class)->group(function () {
             Route::put('/', [EventsController::class, 'update']);
             Route::delete('/', [EventsController::class, 'destroy']);
+        });
 
-            Route::prefix('member/{member}')->middleware(['auth:sanctum', MemberMiddleware::class])->group(function () {
-                Route::patch('', [MemberController::class, 'update']);
-                Route::delete('unsubscribe', [MemberController::class, 'destroy']);
-            });
+        Route::prefix('member/{member}')->middleware(['auth:sanctum', MemberMiddleware::class])->group(function () {
+            Route::patch('', [MemberController::class, 'update']);
+            Route::delete('unsubscribe', [MemberController::class, 'destroy'])->middleware(EventOwnerMiddleware::class);
         });
 
         Route::post('subscribe', [MemberController::class, 'create'])->middleware(ReservableMiddleware::class);
-        Route::post('unsubscribe', [MemberController::class, 'destroy'])->middleware(MemberOwnerMiddleware::class);
+        Route::post('unsubscribe', [MemberController::class, 'destroy'])->middleware(TimeMiddleware::class);
     });
 
     Route::post('events', [EventsController::class, 'store']);

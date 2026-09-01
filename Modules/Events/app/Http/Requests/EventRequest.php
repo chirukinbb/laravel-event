@@ -23,7 +23,7 @@ class EventRequest extends FormRequest
         return [
             'title' => 'required|string',
             'description' => 'required|string',
-            'thumbnail' => 'required_without:thumb_path|file|mimes:webp|max:1024',
+            'thumbnail' => 'required_without:thumbnail_url|file|mimes:webp|max:1024',
             'thumbnail_url' => 'required_without:thumbnail|string',
             'address' => 'required|array',
             'category_id' => 'required|numeric',

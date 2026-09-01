@@ -21,6 +21,7 @@ class MemberController extends Controller
         $event->members()->create([
             'user_id' => auth()->id()
         ]);
+        $event->refresh();
         EventUpdatedNotificationJob::dispatch($event->id);
 
         return EventResource::make($event);
@@ -40,9 +41,13 @@ class MemberController extends Controller
         ]);
     }
 
-    public function destroy(Event $event, Member $member)
+    public function destroy(Event $event)
     {
-        $member->delete();
+        Member::where('event_id', $event->id)
+            ->where('user_id', auth()->id())
+            ->delete();
+
+        $event->refresh();
         EventUpdatedNotificationJob::dispatch($event->id);
 
         return EventResource::make($event->load(['members', 'category', 'tags'])->loadCount('members'));

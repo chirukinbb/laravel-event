@@ -21,7 +21,7 @@ class EventService
 
         $tagService = new TagService($event);
 
-        $tagService->action($event->tags);
+        $tagService->action($event->tags->toArray());
 
         return $event;
     }
@@ -43,7 +43,7 @@ class EventService
 
         $tagService = new TagService($event);
 
-        $tagService->action($event->tags);
+        $tagService->action($event->tags->toArray());
 
         return $event;
     }

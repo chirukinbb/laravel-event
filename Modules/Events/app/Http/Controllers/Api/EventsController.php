@@ -89,7 +89,7 @@ class EventsController extends Controller
 
     public function store(EventRequest $request)
     {
-        $event = $this->eventService->store($request->validated());
+        $event = $this->eventService->store(array_merge($request->validated(), ['user_id' => $request->user()->id]));
 
         return EventResource::make($event);
     }
