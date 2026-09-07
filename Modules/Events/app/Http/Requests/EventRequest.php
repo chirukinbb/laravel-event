@@ -19,7 +19,25 @@ use Illuminate\Http\UploadedFile;
 class EventRequest extends FormRequest
 {
     public function rules()
-    {
+    {// Базовые правила для slots в зависимости от HTTP-метода
+        $slotsRules = ['numeric'];
+
+        if ($this->isMethod('post')) {
+            // При POST число мест должно быть строго больше 0
+            $slotsRules[] = 'min:1';
+        } elseif ($this->isMethod('patch') || $this->isMethod('put')) {
+            // Получаем модель события из роута (например, /events/{event})
+            $event = $this->route('event');
+
+            if ($event) {
+                // Загружаем актуальное количество участников
+                $membersCount = $event->members_count ?? $event->loadCount('members')->members_count;
+
+                // Поле slots не может быть меньше текущего кол-ва участников
+                $slotsRules[] = "min:{$membersCount}";
+            }
+        }
+
         return [
             'title' => 'required|string',
             'description' => 'required|string',
@@ -28,7 +46,7 @@ class EventRequest extends FormRequest
             'address' => 'required|array',
             'category_id' => 'required|numeric',
             'user_id' => 'numeric|exists:users,id',
-            'slots' => 'numeric',
+            'slots' => $slotsRules,
             'tags' => 'array',
             'planing_time' => 'required|date_format:U'
         ];

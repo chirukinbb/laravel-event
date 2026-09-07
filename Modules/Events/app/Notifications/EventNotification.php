@@ -25,6 +25,24 @@ class EventNotification extends Notification
             title: 'Event was updated',
             body: 'Event was updated by organizer. Check it out!',
             image: $this->event->thumbnail_url
-        )))->data(['screen' => 'single_event', 'event_id' => $this->event->id]);
+        )))->data(['screen' => 'single_event', 'event_id' => $this->event->id])->custom([
+            'android' => [
+                'priority' => 'high', // Пробуждает устройство[cite: 2]
+                'notification' => [
+                    'channel_id' => 'high_importance', // Канал с MAX приоритетом на клиенте
+                    'notification_priority' => 'PRIORITY_MAX', // Принудительно заставляет Android выкатить баннер
+                    'default_sound' => true,
+                    'default_vibrate_timings' => true,
+                ],
+            ],
+            'apns' => [
+                'payload' => [
+                    'aps' => [
+                        'sound' => 'default',
+                        'content-available' => 1,
+                    ],
+                ],
+            ],
+        ]);;
     }
 }
