@@ -5,10 +5,10 @@ use Modules\Events\Http\Controllers\Api\CategoryController;
 use Modules\Events\Http\Controllers\Api\EventsController;
 use Modules\Events\Http\Controllers\Api\MemberController;
 use Modules\Events\Http\Middlewares\EventOwnerMiddleware;
+use Modules\Events\Http\Middlewares\HasFilterMiddleware;
 use Modules\Events\Http\Middlewares\MemberMiddleware;
 use Modules\Events\Http\Middlewares\ReservableMiddleware;
-use Modules\Events\Middlewares\HasFilterMiddleware;
-use Modules\Events\Middlewares\TimeMiddleware;
+use Modules\Events\Http\Middlewares\TimeMiddleware;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
     Route::middleware(HasFilterMiddleware::class)->prefix('events')->group(function () {

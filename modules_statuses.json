@@ -1,4 +1,6 @@
 {
   "Users": true,
-  "Events": true
+  "Events": true,
+  "Chat": true,
+  "Notificatiion": true
 }

@@ -30,6 +30,7 @@ class EventsController extends Controller
             // 1. Фильтр по категориям
             ->whereIn('category_id', $filter->categories)
             ->whereNot('user_id', $user->id)
+            ->where('planing_time', '<', now()->subHour()->timestamp)
             ->whereDoesntHave('members', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })

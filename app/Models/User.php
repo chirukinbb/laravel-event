@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Modules\Events\Models\Event;
 use Modules\Events\Models\Member;
+use Modules\Notificatiion\Models\Notification;
 use Modules\Users\Models\Feedback;
 use Modules\Users\Models\Filter;
 use Modules\Users\Models\Profile;
@@ -78,6 +79,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'user_id', 'id');
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
     }
 
     protected static function boot()
