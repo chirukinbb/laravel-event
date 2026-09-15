@@ -54,9 +54,9 @@ class Event extends Model
         return $this->hasMany(Member::class);
     }
 
-    public function chat(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function chat(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
-        return $this->morphTo(Chat::class, 'chatable');
+        return $this->morphOne(Chat::class, 'chatable');
     }
 
     protected static function boot()

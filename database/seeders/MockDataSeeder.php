@@ -295,6 +295,56 @@ class MockDataSeeder extends Seeder
 
             // 'reserved' в моке = members->count().
             $this->seedMembers($event, $eventData['reserved'], $categories);
+
+            // Чат и несколько сообщений для каждого события.
+            $this->seedChat($event, $author);
+        }
+    }
+
+    /**
+     * Создаёт чат события (если его ещё нет) и наполняет его несколькими сообщениями.
+     *
+     * Идемпотентно: при повторном запуске не дублирует ни чат, ни сообщения.
+     * Для новых событий чат уже создаётся автоматически в Event::boot(),
+     * поэтому здесь используем firstOrCreate.
+     */
+    private function seedChat(Event $event, User $author): void
+    {
+        $chat = $event->chat()->firstOrCreate([]);
+
+        // Если сообщения уже есть — пропускаем (повторный запуск).
+        if ($chat->messages()->exists()) {
+            return;
+        }
+
+        $members = $event->members()->with('user')->get()->pluck('user');
+
+        $messages = [
+            sprintf('Всем привет! Создал чат для события «%s». Задавайте вопросы 👋', $event->title),
+            'Подскажите, во сколько лучше подойти?',
+            'Уже записался, очень жду встречи!',
+            'Кто-нибудь был на похожем мероприятии? Поделитесь впечатлениями 🙂',
+            'Отличная идея, обязательно приду!',
+            'Если будут вопросы по площадке — пишите, сориентирую.',
+        ];
+
+        $total = count($messages);
+
+        foreach ($messages as $i => $text) {
+            // Первое сообщение — от автора события, остальные — от участников.
+            $user = $i === 0
+                ? $author
+                : ($members->get(($i - 1) % max($members->count(), 1)) ?? $author);
+
+            $message = $chat->messages()->make([
+                'content' => $text,
+                'user_id' => $user->id,
+            ]);
+
+            // Разносим сообщения по времени (от старого к новому),
+            // чтобы порядок в чате был стабильным и естественным.
+            $message->created_at = now()->subMinutes(($total - $i) * 30);
+            $message->save();
         }
     }
 
@@ -360,8 +410,8 @@ class MockDataSeeder extends Seeder
             ['user_id' => $user->id],
             [
                 'center' => [
-                    'lat' => $data['center_lat'],
-                    'lng' => $data['center_lng'],
+                    $data['center_lat'],
+                    $data['center_lng'],
                 ],
                 'radius' => $data['radius'],
                 'categories' => $this->categoryIds($categories, $data['category_titles']),
