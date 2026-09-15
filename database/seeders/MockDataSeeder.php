@@ -259,35 +259,20 @@ class MockDataSeeder extends Seeder
         );
 
         // User::boot() уже создал пустой профиль и фильтр — заполняем их.
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'name' => self::BOGDAN['name'],
-                'avatar_url' => self::BOGDAN['avatar_url'],
-                'languages' => self::BOGDAN['languages'],
-                'bio' => self::BOGDAN['bio'],
-            ]
-        );
+        $this->seedProfile($user, [
+            'name' => self::BOGDAN['name'],
+            'avatar_url' => self::BOGDAN['avatar_url'],
+            'languages' => self::BOGDAN['languages'],
+            'bio' => self::BOGDAN['bio'],
+        ]);
 
-        $categoryIds = $this->categoryIds($categories, self::FILTER['category_titles']);
-
-        $user->filter()->updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'center' => [
-                    'lat' => self::FILTER['center_lat'],
-                    'lng' => self::FILTER['center_lng'],
-                ],
-                'radius' => self::FILTER['radius'],
-                'categories' => $categoryIds,
-            ]
-        );
+        $this->seedFilter($user, $categories, self::FILTER);
     }
 
     private function seedEvents(array $categories, array $tags): void
     {
         foreach (self::EVENTS as $eventData) {
-            $author = $this->seedAuthor($eventData['author']);
+            $author = $this->seedAuthor($eventData['author'], $categories);
 
             $event = Event::firstOrCreate(
                 ['title' => $eventData['title']],
@@ -309,11 +294,11 @@ class MockDataSeeder extends Seeder
             $event->tags()->sync($tagIds);
 
             // 'reserved' в моке = members->count().
-            $this->seedMembers($event, $eventData['reserved']);
+            $this->seedMembers($event, $eventData['reserved'], $categories);
         }
     }
 
-    private function seedAuthor(array $data): User
+    private function seedAuthor(array $data, array $categories): User
     {
         $user = User::firstOrCreate(
             ['email' => $data['email']],
@@ -323,20 +308,19 @@ class MockDataSeeder extends Seeder
             ]
         );
 
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'name' => $data['name'],
-                'avatar_url' => $data['avatar_url'],
-                'languages' => $data['languages'],
-                'bio' => $data['bio'],
-            ]
-        );
+        $this->seedProfile($user, [
+            'name' => $data['name'],
+            'avatar_url' => $data['avatar_url'],
+            'languages' => $data['languages'],
+            'bio' => $data['bio'],
+        ]);
+
+        $this->seedFilter($user, $categories, self::FILTER);
 
         return $user;
     }
 
-    private function seedMembers(Event $event, int $reserved): void
+    private function seedMembers(Event $event, int $reserved, array $categories): void
     {
         $existing = $event->members()->count();
         $needed = $reserved - $existing;
@@ -346,12 +330,56 @@ class MockDataSeeder extends Seeder
         }
 
         // Участники — фиктивные пользователи (фабрика генерит уникальные email).
-        // User::boot() автоматически создаёт им профиль и фильтр.
+        // User::boot() уже создал пустые профиль и фильтр — заполняем их.
         $participants = User::factory()->count($needed)->create();
 
         foreach ($participants as $participant) {
+            $this->seedProfile($participant, $this->memberProfileData($participant));
+            $this->seedFilter($participant, $categories, self::FILTER);
             $event->members()->create(['user_id' => $participant->id]);
         }
+    }
+
+    /**
+     * Заполняет профиль пользователя (upsert по user_id).
+     */
+    private function seedProfile(User $user, array $data): void
+    {
+        $user->profile()->updateOrCreate(['user_id' => $user->id], $data);
+    }
+
+    /**
+     * Заполняет гео-фильтр пользователя (upsert по user_id).
+     *
+     * @param array<string, Category> $categories
+     * @param array{center_lat: float, center_lng: float, radius: int, category_titles: string[]} $data
+     */
+    private function seedFilter(User $user, array $categories, array $data): void
+    {
+        $user->filter()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'center' => [
+                    'lat' => $data['center_lat'],
+                    'lng' => $data['center_lng'],
+                ],
+                'radius' => $data['radius'],
+                'categories' => $this->categoryIds($categories, $data['category_titles']),
+            ]
+        );
+    }
+
+    /**
+     * Профиль фиктивного участника: имя берём у пользователя, остальное генерим.
+     */
+    private function memberProfileData(User $user): array
+    {
+        return [
+            'name' => $user->name,
+            'avatar_url' => 'https://i.pravatar.cc/300?u=' . urlencode($user->email),
+            'languages' => ['ru'],
+            'bio' => fake('ru_RU')->sentence(),
+        ];
     }
 
     /**
