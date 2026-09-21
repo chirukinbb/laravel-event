@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Chat\Http\Middleware;
+namespace Modules\Chat\Http\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;

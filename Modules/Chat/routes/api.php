@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Chat\Http\Controllers\Api\ChatsController;
-use Modules\Chat\Http\Middleware\EventMemberMiddleware;
+use Modules\Chat\Http\Middlewares\EventMemberMiddleware;
 use Modules\Chat\Http\Middlewares\MessageAuthorMiddleware;
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
