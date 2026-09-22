@@ -18,7 +18,7 @@ class ChatsController extends Controller
             ->latest()
             ->paginate(10);
 
-        return MessageResource::collection($messages->reverse());
+        return MessageResource::collection($messages);
     }
 
     public function create(Chat $chat, MessageRequest $request)
