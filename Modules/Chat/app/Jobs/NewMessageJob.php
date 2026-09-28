@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\Chat\Models\Message;
-use Modules\Events\Notifications\NewMessageNotification;
+use Modules\Chat\Notifications\NewMessageNotification;
 
 class NewMessageJob implements ShouldQueue
 {

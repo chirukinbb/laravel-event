@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\Chat\Models\Message;
-use Modules\Events\Notifications\DeleteMessageNotification;
+use Modules\Chat\Notifications\DeleteMessageNotification;
 
 class DeleteMessageJob implements ShouldQueue
 {

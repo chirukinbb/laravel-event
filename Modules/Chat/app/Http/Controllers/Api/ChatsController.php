@@ -27,8 +27,8 @@ class ChatsController extends Controller
 
     public function store(Chat $chat, MessageRequest $request)
     {
-        $message = $chat->messages()->create($request->validated());
-        NewMessageJob::dispatch($message);
+        $message = $chat->messages()->create(array_merge($request->validated(), ['user_id' => auth()->id()]));
+        NewMessageJob::dispatch($message->id);
 
         return response()->json(true);
     }
@@ -45,14 +45,14 @@ class ChatsController extends Controller
     public function update(Chat $chat, Message $message, MessageRequest $request)
     {
         $message->update($request->validated());
-        UpdateMessageJob::dispatch($message);
+        UpdateMessageJob::dispatch($message->id);
 
         return response()->json(true);
     }
 
     public function destroy(Chat $chat, Message $message)
     {
-        NewMessageJob::dispatch($message);
+        NewMessageJob::dispatch($message->id);
         $message->delete();
 
         return response()->json(true);

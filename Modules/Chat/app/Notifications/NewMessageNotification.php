@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Events\Notifications;
+namespace Modules\Chat\Notifications;
 
 use Illuminate\Notifications\Notification;
 use Modules\Chat\Models\Message;
