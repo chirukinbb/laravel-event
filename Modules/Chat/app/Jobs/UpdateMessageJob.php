@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\Chat\Models\Message;
 use Modules\Chat\Notifications\UpdateMessageNotification;
+use Notification;
 
 class UpdateMessageJob implements ShouldQueue
 {
@@ -22,8 +23,7 @@ class UpdateMessageJob implements ShouldQueue
     {
         $message = Message::find($this->messageId);
 
-        $message->chat->chatable->members->each(function ($member) use ($message) {
-            $member->notify(new UpdateMessageNotification($message));
-        });
+        Notification::route('fcm', 'chat' . $message->chat_id)
+            ->notify(new UpdateMessageNotification($message));
     }
 }

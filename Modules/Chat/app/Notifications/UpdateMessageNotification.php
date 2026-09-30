@@ -21,6 +21,10 @@ class UpdateMessageNotification extends Notification
 
     public function toFcm($notifiable): FcmMessage
     {
-        return (new FcmMessage(notification: new FcmNotification()))->data(['screen' => 'chat', 'chat_id' => $this->message->chat_id, 'message_id' => $this->message->id]);
+        return (new FcmMessage(notification: new FcmNotification()))->data([
+            'action' => 'update_chat_message',
+            'chat_id' => (string)$this->message->chat_id,
+            'message_id' => (string)$this->message->id,
+        ])->topic('chat' . $this->message->chat_id);
     }
 }
