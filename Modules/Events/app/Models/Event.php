@@ -65,7 +65,10 @@ class Event extends Model
 
         static::created(function (Event $event) {
             $chat = $event->chat()->create([]);
-            \Firebase::messaging()->subscribeToTopic('event_' . $chat->id, [$chat->event->user->fcm_token]);
+
+            if ($event->author?->fcm_token) {
+                \Firebase::messaging()->subscribeToTopic('chat' . $chat->id, [$event->author->fcm_token]);
+            }
         });
     }
 }

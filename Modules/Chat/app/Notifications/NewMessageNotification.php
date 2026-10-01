@@ -25,8 +25,8 @@ class NewMessageNotification extends Notification
 
         return (new FcmMessage(notification: new FcmNotification(
             title: 'New Message',
-            body: $profile->name . ' left message in' . $this->message->chat->chatable?->title . '`s chat',
-            image: $profile->avatar_url
+            body: ($profile?->name ?? 'Someone') . ' left a message in ' . ($this->message->chat->chatable?->title ?? '') . "'s chat",
+            image: $profile?->avatar_url
         )))->data(['screen' => 'chat', 'chat_id' => (string)$this->message->chat_id, 'message_id' => (string)$this->message->id])->custom([
             'android' => [
                 'priority' => 'high', // Пробуждает устройство[cite: 2]

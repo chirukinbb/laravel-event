@@ -9,7 +9,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\Chat\Models\Message;
 use Modules\Chat\Notifications\UpdateMessageNotification;
-use Notification;
 
 class UpdateMessageJob implements ShouldQueue
 {
@@ -23,7 +22,12 @@ class UpdateMessageJob implements ShouldQueue
     {
         $message = Message::find($this->messageId);
 
-        Notification::route('fcm', 'chat' . $message->chat_id)
-            ->notify(new UpdateMessageNotification($message));
+        if (!$message) {
+            return;
+        }
+
+        \Firebase::messaging()->send(
+            (new UpdateMessageNotification($message))->toFcm(null)
+        );
     }
 }

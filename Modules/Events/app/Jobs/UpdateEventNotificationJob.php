@@ -32,8 +32,11 @@ class UpdateEventNotificationJob implements ShouldQueue
                     if ($event->members->contains($filter->user_id)) {
                         $filter->user->notify(new EventNotification($event));
                     }
-                    if ($this->distance($filter->center[0], $filter->center[1], $event->coordinate_lat, $event->coordinate_lng) <= $filter->radius) {
-                        $filter->user->notify(new RefreshNotification());
+
+                    if (is_array($filter->center)) {
+                        if ($this->distance($filter->center[0], $filter->center[1], $event->coordinate_lat, $event->coordinate_lng) <= $filter->radius) {
+                            $filter->user->notify(new RefreshNotification());
+                        }
                     }
                 }
             }

@@ -18,13 +18,18 @@ class MemberController extends Controller
 
     public function create(Event $event)
     {
-        $member = $event->members()->create([
-            'user_id' => auth()->id()
+        $user = auth()->user();
+
+        $event->members()->create([
+            'user_id' => $user->id
         ]);
         $event->refresh();
         EventUpdatedNotificationJob::dispatch($event->id);
 
-        \Firebase::messaging()->subscribeToTopic('chat' . $event->chat->id, [$member->user->fcm_token]);;
+        $chat = $event->chat;
+        if ($chat && $user->fcm_token) {
+            \Firebase::messaging()->subscribeToTopic('chat' . $chat->id, [$user->fcm_token]);
+        }
 
         return EventResource::make($event);
     }
@@ -43,18 +48,27 @@ class MemberController extends Controller
         ]);
     }
 
-    public function destroy(Event $event)
+    public function destroy(Event $event, ?Member $member = null)
     {
-        $member = Member::where('event_id', $event->id)
-            ->where('user_id', auth()->id())
-            ->first();
+        $member = $member ?? Member::where('event_id', $event->id)
+                ->where('user_id', auth()->id())
+                ->first();
+
+        if (!$member) {
+            abort(404);
+        }
+
+        $token = $member->user?->fcm_token;
 
         $member->delete();
         $event->refresh();
 
         EventUpdatedNotificationJob::dispatch($event->id);
 
-        \Firebase::messaging()->unsubscribeFromTopic('chat' . $event->chat->id, [$member->user->fcm_token]);;
+        $chat = $event->chat;
+        if ($chat && $token) {
+            \Firebase::messaging()->unsubscribeFromTopic('chat' . $chat->id, [$token]);
+        }
 
         return EventResource::make($event->load(['members', 'category', 'tags'])->loadCount('members'));
     }

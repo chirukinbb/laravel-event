@@ -11,8 +11,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
             Route::get('/', [ChatsController::class, 'index']);
             Route::post('/', [ChatsController::class, 'store']);
         });
+        Route::get('message/{message}', [ChatsController::class, 'show']);
         Route::middleware(MessageAuthorMiddleware::class)->prefix('message/{message}')->group(function () {
-            Route::get('/', [ChatsController::class, 'show']);
             Route::patch('/', [ChatsController::class, 'update']);
             Route::delete('/', [ChatsController::class, 'destroy']);
         });

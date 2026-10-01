@@ -7,23 +7,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Modules\Chat\Models\Message;
 use Modules\Chat\Notifications\DeleteMessageNotification;
-use Notification;
 
 class DeleteMessageJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(private int $messageId)
+    public function __construct(
+        private int $chatId,
+        private int $messageId,
+    )
     {
     }
 
     public function handle()
     {
-        $message = Message::find($this->messageId);
-
-        Notification::route('fcm', 'chat' . $message->chat_id)
-            ->notify(new DeleteMessageNotification($message));
+        \Firebase::messaging()->send(
+            (new DeleteMessageNotification($this->chatId, $this->messageId))->toFcm(null)
+        );
     }
 }

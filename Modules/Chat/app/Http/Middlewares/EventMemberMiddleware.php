@@ -20,6 +20,10 @@ class EventMemberMiddleware
         $userId = auth()->id();
         $chatable = $chat->chatable;
 
+        if (!$chatable) {
+            abort(404);
+        }
+
         // Проверяем: является ли пользователь владельцем chatable
         $isOwner = $chatable->user_id === $userId;
 

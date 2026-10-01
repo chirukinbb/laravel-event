@@ -5,6 +5,7 @@ namespace Modules\Chat\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Modules\Chat\Http\Requests\MessageRequest;
 use Modules\Chat\Http\Resources\MessageResource;
+use Modules\Chat\Jobs\DeleteMessageJob;
 use Modules\Chat\Jobs\NewMessageJob;
 use Modules\Chat\Jobs\UpdateMessageJob;
 use Modules\Chat\Models\Chat;
@@ -52,8 +53,12 @@ class ChatsController extends Controller
 
     public function destroy(Chat $chat, Message $message)
     {
-        NewMessageJob::dispatch($message->id);
+        $chatId = $message->chat_id;
+        $messageId = $message->id;
+
         $message->delete();
+
+        DeleteMessageJob::dispatch($chatId, $messageId);
 
         return response()->json(true);
     }
