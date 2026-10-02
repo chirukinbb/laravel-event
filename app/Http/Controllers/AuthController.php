@@ -91,18 +91,18 @@ class AuthController extends Controller
             $source = $stateData['source'] ?? 'web';
         }
 
-        $user = Socialite::driver($provider)->stateless()->user();
+        $userProvider = Socialite::driver($provider)->stateless()->user();
         $class = $source === 'web' ? 'App\Models\User' : UserAPI::class;
 
-        if ($class::where('email', $user->email)->exists()) {
-            $user = $class::where('email', $user->email)->first();
+        if ($class::where('email', $userProvider->email)->exists()) {
+            $user = $class::where('email', $userProvider->email)->first();
         } else {
             $password = Str::random(12);
-            $user = (new UserService())->signup($user->name, $user->email, $password, $source);
+            $user = (new UserService())->signup($userProvider->name, $userProvider->email, $password, $source);
         }
 
         $user->profile->update([
-            'avatar_url' => $user->avatar,
+            'avatar_url' => $userProvider->avatar,
         ]);
 
         if ($source === 'web') {

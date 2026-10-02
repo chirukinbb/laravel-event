@@ -3,11 +3,16 @@
 namespace Modules\Events\Notifications;
 
 use Illuminate\Notifications\Notification;
+use Modules\Events\Models\Event;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 
 class RefreshNotification extends Notification
 {
+    public function __construct(readonly private Event $event)
+    {
+    }
+
     public function via($notifiable)
     {
         return [FcmChannel::class];
@@ -33,6 +38,6 @@ class RefreshNotification extends Notification
                     ],
                 ],
             ],
-        ]);;
+        ])->topic('event_' . $this->event->id);
     }
 }

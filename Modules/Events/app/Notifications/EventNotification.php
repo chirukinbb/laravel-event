@@ -10,7 +10,7 @@ use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class EventNotification extends Notification
 {
-    public function __construct(private Event $event)
+    public function __construct(readonly private Event $event)
     {
     }
 
@@ -43,6 +43,6 @@ class EventNotification extends Notification
                     ],
                 ],
             ],
-        ]);;
+        ])->topic('event_' . $this->event->id);
     }
 }
