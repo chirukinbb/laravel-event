@@ -31,7 +31,7 @@ class ChatsController extends Controller
         $message = $chat->messages()->create(array_merge($request->validated(), ['user_id' => auth()->id()]));
         NewMessageJob::dispatch($message->id);
 
-        return response()->json(true);
+        return MessageResource::make($message);
     }
 
     public function show(Chat $chat, Message $message)
@@ -48,7 +48,7 @@ class ChatsController extends Controller
         $message->update($request->validated());
         UpdateMessageJob::dispatch($message->id);
 
-        return response()->json(true);
+        return MessageResource::make($message);
     }
 
     public function destroy(Chat $chat, Message $message)
@@ -60,6 +60,6 @@ class ChatsController extends Controller
 
         DeleteMessageJob::dispatch($chatId, $messageId);
 
-        return response()->json(true);
+        return true;
     }
 }

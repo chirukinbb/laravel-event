@@ -43,6 +43,6 @@ class EventNotification extends Notification
                     ],
                 ],
             ],
-        ])->topic('event_' . $this->event->id);
+        ]);
     }
 }
