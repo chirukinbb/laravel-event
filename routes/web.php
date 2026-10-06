@@ -37,9 +37,19 @@ Route::post('/email/resend', [VerificationController::class, 'resend'])->name('v
 Route::get("/dashboard", [\App\Http\Controllers\DashboardController::class, 'index'])->middleware('auth')->name("dashboard");
 
 // Redirect root to login
-Route::get("/", function () {
-    return redirect()->route('login');
+Route::get("/privacy", function () {
+    return view('privacy');
 });
+Route::get("/terms", function () {
+    return view('terms');
+});
+Route::get("/", function () {
+    return view('index');
+});
+Route::get("/user", function () {
+    return view('index');
+});
+
 
 // User management routes (protected)
 Route::middleware(['auth'])->group(function () {

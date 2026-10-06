@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enums\RoleEnum;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -28,26 +29,22 @@ class NewUserNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['emails'];
     }
 
     /**
-     * Get the mail representation of the notification.
+     * Get the emails representation of the notification.
      */
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
             ->subject('Welcome to ' . config('app.name'))
-            ->greeting('Hello ' . $notifiable->name . '!')
-            ->line('Thank you for registering on our platform.')
-            ->line('Your account has been created successfully.')
-            ->line('Here are your login credentials:')
-            ->line('**Email:** ' . $notifiable->email)
-            ->line('**Password:** ' . $this->password)
-            ->line('Please keep this password secure. You can change it after logging in.')
-            ->action('Login Now', url('/login'))
-            ->line('If you did not register, no further action is required.')
-            ->salutation('Best regards, ' . config('app.name'));
+            ->markdown('emails.welcome', [
+                'name' => $notifiable->name,
+                'email' => $notifiable->email,
+                'password' => $this->password,
+                'actionUrl' => env('DEEP_LINK') . "?token={$notifiable->createToken(RoleEnum::USER->name)->plainTextToken}",
+            ]);
     }
 
     /**
