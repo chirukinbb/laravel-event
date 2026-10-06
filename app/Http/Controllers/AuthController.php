@@ -112,4 +112,9 @@ class AuthController extends Controller
 
         return redirect()->away(env('DEEP_LINK') . "?token={$user->createToken(RoleEnum::USER->name)->plainTextToken}");
     }
+
+    function emailEntry(string $token)
+    {
+        return redirect()->away(env('DEEP_LINK') . "?token={$token}");
+    }
 }

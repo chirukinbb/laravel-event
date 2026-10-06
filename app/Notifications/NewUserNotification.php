@@ -29,7 +29,7 @@ class NewUserNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['emails'];
+        return ['mail'];
     }
 
     /**
@@ -43,7 +43,7 @@ class NewUserNotification extends Notification implements ShouldQueue
                 'name' => $notifiable->name,
                 'email' => $notifiable->email,
                 'password' => $this->password,
-                'actionUrl' => env('DEEP_LINK') . "?token={$notifiable->createToken(RoleEnum::USER->name)->plainTextToken}",
+                'actionUrl' => route('app.login', ['token' => $notifiable->createToken(RoleEnum::USER->name)->plainTextToken]),
             ]);
     }
 

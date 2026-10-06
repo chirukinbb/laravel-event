@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +48,7 @@ Route::get("/", function () {
 Route::get("/user", function () {
     return view('index');
 });
+Route::get('app/login/{token}', 'App\Http\Controllers\AuthController@login')->name('app.login');
 
 
 // User management routes (protected)

@@ -7,12 +7,12 @@
   <title>VibeCheck — афиша событий и поиск компании</title>
   <meta name="description"
         content="VibeCheck: афиша событий рядом, поиск компании (+1), свои встречи и чаты ивентов. Слови вайб своего города!">
-  <link rel="canonical" href="https://vibecheck.example/">
+  <link rel="canonical" href="{{ request()->fullUrl() }}">
   <meta name="theme-color" content="#0c0a2e">
   <meta name="color-scheme" content="dark">
 
   <!-- Фавикон -->
-  <link rel="icon" href="/images/icon.jpg" sizes="48x48">
+  <link rel="icon" href="/images/icon.png" sizes="48x48">
 
   <!-- Open Graph (Telegram, VK, WhatsApp, Facebook) -->
   <meta property="og:type" content="website">
