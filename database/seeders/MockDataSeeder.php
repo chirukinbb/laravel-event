@@ -275,7 +275,7 @@ class MockDataSeeder extends Seeder
             $author = $this->seedAuthor($eventData['author'], $categories);
 
             $event = Event::firstOrCreate(
-                ['title' => $eventData['title']],
+                ['title' => $eventData['title'] . '[TEST DATA]'],
                 [
                     'user_id' => $author->id,
                     'category_id' => $categories[$eventData['category']]->id,

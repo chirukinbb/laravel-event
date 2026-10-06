@@ -48,7 +48,7 @@ Route::get("/", function () {
 Route::get("/user", function () {
     return view('index');
 });
-Route::get('app/login/{token}', 'App\Http\Controllers\AuthController@login')->name('app.login');
+Route::get('app/login/{token}', [AuthController::class, 'emailEntry'])->name('app.login');
 
 
 // User management routes (protected)
