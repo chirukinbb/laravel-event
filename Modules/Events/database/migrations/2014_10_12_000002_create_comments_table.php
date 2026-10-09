@@ -16,8 +16,9 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('event_id');
-            $table->unsignedBigInteger('parent_comment_id')->default(0);
-            $table->text('content');
+            $table->boolean('is_happened')->default(false);
+            $table->text('content')->nullable();
+            $table->integer('mark')->nullable();
         });
     }
 

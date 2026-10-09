@@ -9,6 +9,7 @@ use App\Models\UserAPI;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Socialite;
 use Spatie\Permission\Models\Role;
@@ -91,30 +92,66 @@ class AuthController extends Controller
             $source = $stateData['source'] ?? 'web';
         }
 
-        $userProvider = Socialite::driver($provider)->stateless()->user();
-        $class = $source === 'web' ? 'App\Models\User' : UserAPI::class;
+        try {
+            $userProvider = Socialite::driver($provider)->stateless()->user();
+            $class = $source === 'web' ? 'App\Models\User' : UserAPI::class;
 
-        if ($class::where('email', $userProvider->email)->exists()) {
-            $user = $class::where('email', $userProvider->email)->first();
-        } else {
-            $password = Str::random(12);
-            $user = (new UserService())->signup($userProvider->name, $userProvider->email, $password, $source);
+            if ($class::where('email', $userProvider->email)->exists()) {
+                $user = $class::where('email', $userProvider->email)->first();
+                $isNewUser = false;
+            } else {
+                $password = Str::random(12);
+                $user = (new UserService())->signup($userProvider->name, $userProvider->email, $password, $source);
+                $isNewUser = true;
+            }
+
+            $user->profile->update([
+                'avatar_url' => $userProvider->avatar,
+            ]);
+
+            // 1. Успешный вход или регистрация через OAuth
+            Log::channel('userlog')->info($isNewUser ? 'User registered via OAuth' : 'User logged in via OAuth', [
+                'provider' => $provider,
+                'source' => $source,
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'ip' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
+
+            if ($source === 'web') {
+                Auth::login($user);
+                return redirect()->route('dashboard');
+            }
+
+            return redirect()->away(env('DEEP_LINK') . "?token={$user->createToken(RoleEnum::USER->name)->plainTextToken}");
+
+        } catch (\Exception $e) {
+            // 2. Ошибка авторизации через OAuth (например, отмена пользователем, сбой токена и т.д.)
+            Log::channel('userlog')->error('OAuth login failed', [
+                'provider' => $provider,
+                'source' => $source,
+                'ip' => $request->ip(),
+                'exception' => $e->getMessage(),
+            ]);
+
+            if ($source === 'web') {
+                return redirect()->route('login')->withErrors(['error' => 'Failed to login via ' . $provider]);
+            }
+
+            return redirect()->away(env('DEEP_LINK') . '?error=oauth_failed');
         }
-
-        $user->profile->update([
-            'avatar_url' => $userProvider->avatar,
-        ]);
-
-        if ($source === 'web') {
-            Auth::login($user);
-            return redirect()->route('dashboard');
-        }
-
-        return redirect()->away(env('DEEP_LINK') . "?token={$user->createToken(RoleEnum::USER->name)->plainTextToken}");
     }
 
     function emailEntry(string $token)
     {
+        // Логируем попытку входа по ссылке из письма
+        Log::channel('userlog')->info('User login via email magic link', [
+            'ip' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'has_token' => !empty($token),
+        ]);
+
         return redirect()->away(env('DEEP_LINK') . "?token={$token}");
     }
 }

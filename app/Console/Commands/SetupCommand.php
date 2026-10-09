@@ -25,6 +25,7 @@ class SetupCommand extends Command
      */
     public function handle()
     {
+        \Artisan::call('backup:run');
         \Artisan::call('db:wipe');
         \Artisan::call('migrate');
         \Artisan::call('db:seed');

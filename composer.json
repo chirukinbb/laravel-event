@@ -16,9 +16,12 @@
     "laravel/sanctum": "^4.0",
     "laravel/socialite": "^5.28",
     "laravel/tinker": "^2.10.1",
+    "masbug/flysystem-google-drive-ext": "^2.5",
     "nwidart/laravel-modules": "^13.0",
     "predis/predis": "^3.5",
-    "spatie/laravel-permission": "^7.2"
+    "spatie/laravel-backup": "^10.3",
+    "spatie/laravel-permission": "^7.2",
+    "ext-zip": "*"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23",

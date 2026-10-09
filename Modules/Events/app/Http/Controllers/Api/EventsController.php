@@ -5,8 +5,10 @@ namespace Modules\Events\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Events\Http\Requests\EventRequest;
+use Modules\Events\Http\Requests\FeedbackRequest;
 use Modules\Events\Http\Resource\EventCollection;
 use Modules\Events\Http\Resource\EventResource;
+use Modules\Events\Models\Comment;
 use Modules\Events\Models\Event;
 use Modules\Events\Services\EventService;
 
@@ -64,6 +66,7 @@ class EventsController extends Controller
     public function organizing(Request $request)
     {
         $events = Event::where('user_id', $request->user()->id)
+            ->where('planing_time', $request->get('status') === 'archive' ? '<' : '>', now()->timestamp)
             ->with(['members', 'category', 'tags'])
             ->withCount('members')
             ->latest()
@@ -75,6 +78,7 @@ class EventsController extends Controller
     public function attending(Request $request)
     {
         $events = Event::whereRelation('members', 'user_id', $request->user()->id)
+            ->where('planing_time', $request->get('status') === 'archive' ? '<' : '>', now()->timestamp)
             ->with(['category', 'tags'])
             ->withCount('members')
             ->latest()
@@ -109,5 +113,20 @@ class EventsController extends Controller
         return response()->json([
             'message' => 'Event deleted successfully'
         ], 200);
+    }
+
+    public function communication(Event $event, FeedbackRequest $request)
+    {
+        Comment::create([
+            'user_id' => $request->user()->id,
+            'event_id' => $event->id,
+            'content' => $request->comment,
+            'mark' => (int)$request->mark
+        ]);
+    }
+
+    public function comments(Event $event)
+    {
+
     }
 }

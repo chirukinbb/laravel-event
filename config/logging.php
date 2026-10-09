@@ -73,6 +73,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'userlog' => [
+            'driver' => 'daily', // Используем встроенный драйвер ротации по дням
+            'path' => storage_path('logs/userlog.log'), // Файлы будут именоваться userlog-YYYY-MM-DD.log
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => env('LOG_DAILY_DAYS', 14), // Хранить логи за последние 14 дней
+            'replace_placeholders' => true, // В Laravel 10/11 подставляет {foo} из context в строку сообщения
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
