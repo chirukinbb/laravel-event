@@ -3,35 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <!-- Основное -->
   <title>VibeCheck — афиша событий и поиск компании</title>
-  <meta name="description"
-        content="VibeCheck: афиша событий рядом, поиск компании (+1), свои встречи и чаты ивентов. Слови вайб своего города!">
-  <link rel="canonical" href="{{ request()->fullUrl() }}">
-  <meta name="theme-color" content="#0c0a2e">
-  <meta name="color-scheme" content="dark">
-
-  <!-- Фавикон -->
-  <link rel="icon" href="/images/icon.png" sizes="48x48">
-
-  <!-- Open Graph (Telegram, VK, WhatsApp, Facebook) -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="VibeCheck">
-  <meta property="og:title" content="VibeCheck — афиша событий и поиск компании">
-  <meta property="og:description"
-        content="События рядом, компания для любого отдыха и чаты ивентов. Слови вайб своего города!">
-  <meta property="og:url" content="{{ request()->fullUrl() }}">
-  <meta property="og:image" content="{{ asset('images/cover.jpg') }}">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="VibeCheck. Events. Company. Vibes.">
-  <meta property="og:locale" content="ru_RU">
-
-  <!-- Twitter / X -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="VibeCheck — афиша событий и поиск компании">
-  <meta name="twitter:description" content="События рядом, компания для любого отдыха и чаты ивентов.">
-  <meta name="twitter:image" content="{{ asset('images/cover.jpg') }}">
+  <meta name="description" content="VibeCheck: афиша событий рядом, поиск компании (+1), свои встречи и чаты ивентов.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800&display=swap">
   <style>
@@ -128,107 +101,29 @@
       padding: 48px 0 40px
     }
 
-    .dev {
+    .phone-wrap {
       position: relative;
       justify-self: center;
-      width: 300px;
-      padding: 10px;
-      border-radius: 52px;
-      background: linear-gradient(145deg, #8a8fb8, #2b2c4a 28%, #12122a 62%, #55598a);
-      box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .22), 0 0 0 1px #05051a, 0 50px 90px rgba(0, 0, 0, .65), 0 0 100px rgba(138, 77, 255, .45);
-      animation: fl 6s ease-in-out infinite
+      width: 100%;
+      display: flex;
+      justify-content: center
     }
 
-    .dev::before, .dev::after {
+    .phone-wrap::before {
       content: "";
       position: absolute;
-      width: 4px;
-      border-radius: 3px;
-      background: linear-gradient(#5a5e8c, #24253f)
-    }
-
-    .dev::before {
-      right: -4px;
-      top: 150px;
-      height: 76px
-    }
-
-    .dev::after {
-      left: -4px;
-      top: 120px;
-      height: 116px
-    }
-
-    .bezel {
-      padding: 5px;
-      border-radius: 43px;
-      background: #000
-    }
-
-    .screen {
-      position: relative;
-      border-radius: 38px;
-      overflow: hidden;
-      background: #212226
-    }
-
-    .sb {
-      position: relative;
-      height: 36px;
-      padding: 9px 24px 0;
-      display: flex;
-      justify-content: space-between;
-      color: #fff;
-      font: 600 12px/1 Montserrat, system-ui, sans-serif;
-      background: #212226
-    }
-
-    .sb svg {
-      height: 11px;
-      width: auto;
-      fill: #fff
-    }
-
-    .sb span {
-      display: flex;
-      gap: 5px;
-      align-items: center
-    }
-
-    .cam {
-      position: absolute;
-      top: 11px;
-      left: 50%;
-      width: 12px;
-      height: 12px;
-      margin-left: -6px;
+      inset: 8% 4%;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #2b3a66, #05060f 60%);
-      box-shadow: 0 0 0 2px #000
+      background: radial-gradient(closest-side, rgba(255, 79, 230, .45), rgba(138, 77, 255, .28) 55%, transparent);
+      filter: blur(30px)
     }
 
-    .shot {
-      display: block;
-      width: 100%;
-      height: auto
-    }
-
-    .glare {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(115deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, 0) 32%)
-    }
-
-    .pill {
-      position: absolute;
-      bottom: 8px;
-      left: 50%;
-      width: 96px;
-      height: 4px;
-      margin-left: -48px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, .75)
+    .phone {
+      position: relative;
+      width: min(340px, 100%);
+      height: auto;
+      filter: drop-shadow(0 40px 50px rgba(0, 0, 0, .55));
+      animation: fl 6s ease-in-out infinite
     }
 
     @keyframes fl {
@@ -263,8 +158,8 @@
         margin-left: auto
       }
 
-      .dev {
-        width: 268px
+      .phone {
+        width: min(300px, 80%)
       }
     }
 
@@ -504,8 +399,8 @@
         <h1>Слови вайб своего города</h1>
         <p class="lead">Афиша событий рядом и простой способ найти компанию для любого отдыха: от концерта до настолок
           во дворе.</p>
-        <a class="play" id="download" href="{{env('DOWNLOAD_LINK')}}"
-           rel="noopener">
+
+        <a class="play" id="download" href="{{env('DOWNLOAD_LINK')}}" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M3.6 1.8 14 12 3.6 22.2c-.4-.3-.6-.8-.6-1.4V3.2c0-.6.2-1.1.6-1.4Z" fill="#38e1ff"/>
             <path d="m17.4 8.6-3.4 3.4L3.6 1.8c.5-.3 1.1-.3 1.7 0l12.1 6.8Z" fill="#6ee87a"/>
@@ -514,23 +409,9 @@
           </svg>
           <div><small>Доступно в</small><span>Google Play</span></div>
         </a></div>
-      <div class="dev">
-        <div class="bezel">
-          <div class="screen">
-            <div class="sb"><b>9:41</b><i class="cam"></i><span><svg viewBox="0 0 18 11"><path
-                          d="M0 8h3v3H0zM5 5h3v6H5zM10 2.5h3V11h-3zM15 0h3v11h-3z"/></svg><svg viewBox="0 0 22 11"><rect
-                          x=".5" y=".5" width="18" height="10" rx="2.5" fill="none" stroke="#fff"/><rect x="2" y="2"
-                                                                                                         width="12"
-                                                                                                         height="7"
-                                                                                                         rx="1.2"/><rect
-                          x="19.5" y="3.5" width="2" height="4" rx="1"/></svg></span></div>
-            <img class="shot" src="images/shot.jpg"
-                 alt="Экран события в приложении VibeCheck: джазовый вечер, карта и чат" width="560" height="1151">
-            <div class="pill"></div>
-            <div class="glare"></div>
-          </div>
-        </div>
-      </div>
+      <div class="phone-wrap"><img class="phone" src="images/phone.webp"
+                                   alt="Экран события в приложении VibeCheck: джазовый вечер, карта и чат" width="587"
+                                   height="1100"></div>
     </div>
     <img class="cover" src="images/cover.jpg" alt="VibeCheck. Events. Company. Vibes." width="1200" height="580">
 
@@ -585,7 +466,8 @@
   </main>
 
   <footer>
-    <div><a href="terms">Пользовательское соглашение</a><a href="privacy">Политика конфиденциальности</a></div>
+    <div><a href="terms.html">Пользовательское соглашение</a><a href="privacy.html">Политика конфиденциальности</a>
+    </div>
     <div id="copyright"></div>
 
     <script>
