@@ -18,39 +18,33 @@ return [
          * The name of this application. You can use this name to monitor
          * the backups.
          */
-        'name' => env('APP_NAME', 'laravel-backup'),
+        'name' => env('GOOGLE_DRIVE_FOLDER_NAME'),
 
         'source' => [
             'files' => [
+
                 /*
-                 * The list of directories and files that will be included in the backup.
+                 * Список путей, которые ДОЛЖНЫ быть включены в бэкап.
                  */
                 'include' => [
-                    base_path(),
-                    // storage_path(),  // Include if you use zero downtime deployments and don't follow symlinks
+                    // Вместо base_path() пишем точный путь к пользовательским файлам
+                    storage_path('app'),
                 ],
 
                 /*
-                 * These directories and files will be excluded from the backup.
-                 *
-                 * Directories used by the backup process will automatically be excluded.
+                 * Список путей, которые нужно ИСКЛЮЧИТЬ из выбранной выше директории.
                  */
                 'exclude' => [
-                    base_path('vendor'),
-                    base_path('node_modules'),
-                    storage_path('framework'),
+                    // Исключаем системный кэш самого фреймворка, чтобы бэкап не раздувался
+                    storage_path('app/framework'),
+
+                    // ОБЯЗАТЕЛЬНО исключаем временную папку пакета бэкапа, иначе произойдет зацикливание
+                    storage_path('app/backup-temp'),
                 ],
 
-                /*
-                 * Determines if symlinks should be followed.
-                 */
                 'follow_links' => false,
 
-                /*
-                 * Determines if it should avoid unreadable folders.
-                 */
                 'ignore_unreadable_directories' => false,
-
                 /*
                  * This path is used to make directories in resulting zip-file relative
                  * Set to `null` to include complete absolute path
@@ -164,7 +158,7 @@ return [
              * The disk names on which the backups will be stored.
              */
             'disks' => [
-                'local',
+                'google',
             ],
 
             /*
@@ -236,7 +230,7 @@ return [
         'notifiable' => Notifiable::class,
 
         'mail' => [
-            'to' => 'your@example.com',
+            'to' => env('MAIL_TO', 'your@example.com'),
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),

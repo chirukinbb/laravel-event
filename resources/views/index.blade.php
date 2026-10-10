@@ -504,7 +504,7 @@
         <h1>Слови вайб своего города</h1>
         <p class="lead">Афиша событий рядом и простой способ найти компанию для любого отдыха: от концерта до настолок
           во дворе.</p>
-        <a class="play" id="download" href="https://play.google.com/store/apps/details?id=com.vibecheck.app"
+        <a class="play" id="download" href="{{env('DOWNLOAD_LINK')}}"
            rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M3.6 1.8 14 12 3.6 22.2c-.4-.3-.6-.8-.6-1.4V3.2c0-.6.2-1.1.6-1.4Z" fill="#38e1ff"/>
@@ -572,7 +572,7 @@
     <div class="cta">
       <h2>Не пропускай самые яркие события вокруг</h2>
       <p>Скачивай VibeCheck, находи компанию и лови правильный вайб.</p>
-      <a class="play" href="https://play.google.com/store/apps/details?id=com.vibecheck.app" rel="noopener">
+      <a class="play" href="{{env('DOWNLOAD_LINK')}}" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M3.6 1.8 14 12 3.6 22.2c-.4-.3-.6-.8-.6-1.4V3.2c0-.6.2-1.1.6-1.4Z" fill="#38e1ff"/>
           <path d="m17.4 8.6-3.4 3.4L3.6 1.8c.5-.3 1.1-.3 1.7 0l12.1 6.8Z" fill="#6ee87a"/>
@@ -586,7 +586,16 @@
 
   <footer>
     <div><a href="terms">Пользовательское соглашение</a><a href="privacy">Политика конфиденциальности</a></div>
-    <div>© 2026 VibeCheck. Events. Company. Vibes.</div>
+    <div id="copyright"></div>
+
+    <script>
+      const startYear = 2026;
+      const currentYear = new Date().getFullYear();
+      const years = currentYear > startYear ? `${startYear}–${currentYear}` : `${startYear}`;
+
+      document.getElementById('copyright').textContent =
+              `© ${years} VibeCheck. Events. Company. Vibes.`;
+    </script>
   </footer>
 </div>
 </body>
