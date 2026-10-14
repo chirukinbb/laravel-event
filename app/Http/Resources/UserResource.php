@@ -17,6 +17,7 @@ class UserResource extends JsonResource
     {
         $userResourceEvent = new UserResourceEvent($this->resource);
 
+        $userResourceEvent->addUnit('id', $this->resource->id);
         $userResourceEvent->addUnit('name', $this->resource->name);
 
         event($userResourceEvent);

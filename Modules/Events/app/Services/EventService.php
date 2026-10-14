@@ -3,8 +3,6 @@
 namespace Modules\Events\Services;
 
 use Illuminate\Support\Facades\Log;
-use Modules\Events\Jobs\NewEventNotificationJob;
-use Modules\Events\Jobs\UpdateEventNotificationJob;
 use Modules\Events\Models\Event;
 
 class EventService
@@ -18,8 +16,6 @@ class EventService
             unset($data['address']);
 
             $event = Event::create($data);
-
-            NewEventNotificationJob::dispatch($event->id);
 
             $tagService = new TagService($event);
             $tagService->action($event->tags->toArray());
@@ -66,9 +62,19 @@ class EventService
             // Фиксируем исходные значения для аудита изменений
             $oldData = $event->only(array_keys($data));
 
-            $event->update($data);
+            $isCriticalChange =
+                $data['title'] !== $event->title ||
+                $data['description'] !== $event->description;
 
-            UpdateEventNotificationJob::dispatch($event->id);
+            if (!$isCriticalChange) {
+                $event->update($data);
+            } else {
+                $event->update(array_merge($data, [
+                    'updated' => $event->updated + 1,
+                    'approved' => false,
+                    'reason' => null
+                ]));
+            }
 
             $tagService = new TagService($event);
             $tagService->action($event->tags->toArray());

@@ -12,6 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use Kreait\Firebase\Messaging\MulticastSendReport;
 use Log;
 use Modules\Events\Models\Event;
+use Modules\Events\Notifications\ModerationMessageNotification;
 use Modules\Events\Notifications\RefreshNotification;
 use Modules\Users\Models\Filter;
 use Modules\Users\Traits\FilterTrait;
@@ -31,6 +32,13 @@ class UpdateEventNotificationJob implements ShouldQueue
         if (!$event) {
             return;
         }
+
+        $author = User::find($event->user_id);
+
+        $author->notify(new ModerationMessageNotification($event));
+
+        if (!$event->approved)
+            return;
 
         $tokens = []; // [user_id => token]
 

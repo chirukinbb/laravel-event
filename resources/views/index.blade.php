@@ -456,27 +456,27 @@
       <a class="play" href="{{env('DOWNLOAD_LINK')}}" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M3.6 1.8 14 12 3.6 22.2c-.4-.3-.6-.8-.6-1.4V3.2c0-.6.2-1.1.6-1.4Z" fill="#38e1ff"/>
-          <path d="m17.4 8.6-3.4 3.4L3.6 1.8c.5-.3 1.1-.3 1.7 0l12.1 6.8Z" fill="#6ee87a"/>
-          <path d="m17.4 15.4-12.1 6.8c-.6.3-1.2.3-1.7 0L14 12l3.4 3.4Z" fill="#ff4f6a"/>
-          <path d="m21 10.2-3.6-1.6L14 12l3.4 3.4 3.6-1.6c1.3-.8 1.3-2.8 0-3.6Z" fill="#ffd23f"/>
+            <path d="m17.4 8.6-3.4 3.4L3.6 1.8c.5-.3 1.1-.3 1.7 0l12.1 6.8Z" fill="#6ee87a"/>
+            <path d="m17.4 15.4-12.1 6.8c-.6.3-1.2.3-1.7 0L14 12l3.4 3.4Z" fill="#ff4f6a"/>
+            <path d="m21 10.2-3.6-1.6L14 12l3.4 3.4 3.6-1.6c1.3-.8 1.3-2.8 0-3.6Z" fill="#ffd23f"/>
         </svg>
-        <div><small>Доступно в</small><span>Google Play</span></div>
+          <div><small>Доступно в</small><span>Google Play</span></div>
       </a>
     </div>
   </main>
 
-  <footer>
-    <div><a href="terms.html">Пользовательское соглашение</a><a href="privacy.html">Политика конфиденциальности</a>
-    </div>
-    <div id="copyright"></div>
+    <footer>
+        <div><a href="terms">Пользовательское соглашение</a><a href="privacy">Политика конфиденциальности</a>
+        </div>
+        <div id="copyright"></div>
 
-    <script>
-      const startYear = 2026;
-      const currentYear = new Date().getFullYear();
-      const years = currentYear > startYear ? `${startYear}–${currentYear}` : `${startYear}`;
+        <script>
+            const startYear = 2026;
+            const currentYear = new Date().getFullYear();
+            const years = currentYear > startYear ? `${startYear}–${currentYear}` : `${startYear}`;
 
-      document.getElementById('copyright').textContent =
-              `© ${years} VibeCheck. Events. Company. Vibes.`;
+            document.getElementById('copyright').textContent =
+                `© ${years} VibeCheck. Events. Company. Vibes.`;
     </script>
   </footer>
 </div>

@@ -6,8 +6,11 @@ use App\Events\AbilitiesEvent;
 use App\Events\DashboardEvent;
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
+use Modules\Events\Console\Commands\NewEventApprovedCommand;
+use Modules\Events\Console\Commands\UpdateEventApprovedCommand;
 use Modules\Events\Enums\PermissionEnum;
 use Nwidart\Modules\Support\ModuleServiceProvider;
+use Schedule;
 
 class EventsServiceProvider extends ModuleServiceProvider
 {
@@ -26,7 +29,7 @@ class EventsServiceProvider extends ModuleServiceProvider
      *
      * @var string[]
      */
-    // protected array $commands = [];
+    protected array $commands = [NewEventApprovedCommand::class, UpdateEventApprovedCommand::class];
 
     /**
      * Provider classes to register.
@@ -43,12 +46,19 @@ class EventsServiceProvider extends ModuleServiceProvider
      *
      * @param $schedule
      */
+    protected function configureSchedules(Schedule|\Illuminate\Console\Scheduling\Schedule $schedule): void
+    {
+        $schedule->command('approved:new-event')->hourly();
+        $schedule->command('approved:update-event')->hourly();
+    }
+
     public function boot(): void
     {
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'Database/Migrations'));
+        $this->registerCommands();
 
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
             $event->menu->addAfter('dashboard', [

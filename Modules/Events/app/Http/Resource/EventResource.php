@@ -63,6 +63,10 @@ class EventResource extends JsonResource
 
         if ($request->user()->id === $this->resource->user_id) {
             $event->addUnit('members', $this->getMembers());
+            $event->addUnit('approved', !!$this->resource->approved);
+
+            if (!$this->resource->approved && $this->resource->reason)
+                $event->addUnit('reason', $this->resource->reason);
         }
 
         event($event);

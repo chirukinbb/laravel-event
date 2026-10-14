@@ -44,4 +44,8 @@ return [
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
         //   'redirect' => route('api.auth.callback',['provider'=>'facebook'])
     ],
+    'openrouter' => [
+        'api_key' => env('OPENROUTER_API_KEY'),
+        'model' => env('OPENROUTER_MODEL'),
+    ]
 ];

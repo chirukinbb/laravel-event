@@ -13,6 +13,7 @@ use Kreait\Firebase\Messaging\MulticastSendReport;
 use Log;
 use Modules\Events\Models\Event;
 use Modules\Events\Notifications\EventNotification;
+use Modules\Events\Notifications\ModerationMessageNotification;
 use Modules\Users\Models\Filter;
 use Modules\Users\Traits\FilterTrait;
 
@@ -31,6 +32,13 @@ class NewEventNotificationJob implements ShouldQueue
         if (!$event) {
             return;
         }
+
+        $author = User::find($event->user_id);
+
+        $author->notify(new ModerationMessageNotification($event));
+
+        if (!$event->approved)
+            return;
 
         $authorLanguages = $event->author?->profile?->languages ?? [];
         $tokens = []; // [user_id => token]

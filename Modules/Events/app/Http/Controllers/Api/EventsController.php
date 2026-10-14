@@ -57,6 +57,7 @@ class EventsController extends Controller
             })
             ->with(['category', 'tags'])
             ->withCount('members')
+            ->whereApproved(true)
             ->latest()
             ->paginate();
 

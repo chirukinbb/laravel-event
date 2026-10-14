@@ -5,8 +5,10 @@ use Modules\Events\Http\Controllers\Api\CategoryController;
 use Modules\Events\Http\Controllers\Api\EventsController;
 use Modules\Events\Http\Controllers\Api\MemberController;
 use Modules\Events\Http\Middlewares\EventOwnerMiddleware;
+use Modules\Events\Http\Middlewares\EventUpdateMiddleware;
 use Modules\Events\Http\Middlewares\HasFilterMiddleware;
 use Modules\Events\Http\Middlewares\MemberMiddleware;
+use Modules\Events\Http\Middlewares\OrganizerMiddleware;
 use Modules\Events\Http\Middlewares\ReservableMiddleware;
 use Modules\Events\Http\Middlewares\TimeMiddleware;
 
@@ -19,7 +21,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
 
     Route::prefix('event/{event}')->group(function () {
         Route::middleware(EventOwnerMiddleware::class)->group(function () {
-            Route::put('/', [EventsController::class, 'update']);
+            Route::put('/', [EventsController::class, 'update'])->middleware(EventUpdateMiddleware::class);
             Route::delete('/', [EventsController::class, 'destroy']);
         });
 
@@ -32,7 +34,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::delete('unsubscribe', [MemberController::class, 'destroy'])->middleware(TimeMiddleware::class);
     });
 
-    Route::post('events', [EventsController::class, 'store']);
+    Route::post('events', [EventsController::class, 'store'])->middleware(OrganizerMiddleware::class);
     Route::get('event/{event}', [EventsController::class, 'show']);
 });
 
