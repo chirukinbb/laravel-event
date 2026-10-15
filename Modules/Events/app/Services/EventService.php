@@ -54,6 +54,10 @@ class EventService
                 unset($data['address']);
             }
 
+            $isCriticalChange =
+                $data['title'] !== $event->title ||
+                $data['description'] !== $event->description || isset($data['thumbnail']);
+
             if (isset($data['thumbnail'])) {
                 $data['thumbnail_url'] = asset($data['thumbnail']->store('thumbnails', 'public'));
                 unset($data['thumbnail']);
@@ -61,10 +65,6 @@ class EventService
 
             // Фиксируем исходные значения для аудита изменений
             $oldData = $event->only(array_keys($data));
-
-            $isCriticalChange =
-                $data['title'] !== $event->title ||
-                $data['description'] !== $event->description;
 
             if (!$isCriticalChange) {
                 $event->update($data);
