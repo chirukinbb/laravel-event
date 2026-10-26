@@ -32,7 +32,7 @@ class EventsController extends Controller
             // 1. Фильтр по категориям
             ->whereIn('category_id', $filter->categories)
             ->whereNot('user_id', $user->id)
-            ->where('planing_time', '>', now()->subHour()->timestamp)
+            ->where('planing_time', '>', now()->subHour())
             ->whereDoesntHave('members', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
@@ -67,7 +67,7 @@ class EventsController extends Controller
     public function organizing(Request $request)
     {
         $events = Event::where('user_id', $request->user()->id)
-            ->where('planing_time', $request->get('status') === 'archive' ? '<' : '>', now()->timestamp)
+            ->where('planing_time', $request->get('status') === 'archive' ? '<' : '>', now())
             ->with(['members', 'category', 'tags'])
             ->withCount('members')
             ->latest()
@@ -79,7 +79,7 @@ class EventsController extends Controller
     public function attending(Request $request)
     {
         $events = Event::whereRelation('members', 'user_id', $request->user()->id)
-            ->where('planing_time', $request->get('status') === 'archive' ? '<' : '>', now()->timestamp)
+            ->where('planing_time', $request->get('status') === 'archive' ? '<' : '>', now())
             ->with(['category', 'tags'])
             ->withCount('members')
             ->latest()

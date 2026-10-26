@@ -199,6 +199,174 @@ class MockDataSeeder extends Seeder
             ],
             'tags' => ['вино', 'дегустация'],
         ],
+        [
+            'title' => 'Утренняя пробежка по набережной',
+            'category' => 'Спорт',
+            'thumbnail_url' => 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600',
+            'description' => 'Лёгкая беговая утреняя группа по набережной, с разминкой, контролем темпа и короткой медитацией после финиша. Подойдёт как новичкам, так и тем, кто хочет поддерживать форму.',
+            'coordinate_lat' => '55.7522',
+            'coordinate_lng' => '37.6206',
+            'country_iso' => 'RU',
+            'planing_days' => 2,
+            'slots' => 18,
+            'address' => 'Москва, набережная Тараса Шевченко, 3',
+            'reserved' => 9,
+            'author' => [
+                'name' => 'Никита Кузнецов',
+                'email' => 'nikita.kuznetsov@example.com',
+                'phone' => '+79034567890',
+                'country_phone_code' => '+7',
+                'country_phone_iso' => 'RU',
+                'languages' => ['ru', 'en'],
+                'bio' => 'Тренер по бегу, сертифицированный коуч по выносливости',
+                'avatar_url' => 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600',
+            ],
+            'tags' => ['бег', 'спорт', 'утро'],
+        ],
+        [
+            'title' => 'Клубный сет в лофте',
+            'category' => 'Музыка',
+            'thumbnail_url' => 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600',
+            'description' => 'Вечер электронного и фанк-музыки в индустриальном лофте с диджей-сетом, баром и танцполом. Настроение, звук и атмосфера — без лишних формальностей.',
+            'coordinate_lat' => '55.7694',
+            'coordinate_lng' => '37.6340',
+            'country_iso' => 'RU',
+            'planing_days' => 14,
+            'slots' => 80,
+            'address' => 'Москва, ул. Нижняя Сыромятническая, 10, Loft 83',
+            'reserved' => 63,
+            'author' => [
+                'name' => 'Светлана Морозова',
+                'email' => 'svetlana.morozova@example.com',
+                'phone' => '+79056667788',
+                'country_phone_code' => '+7',
+                'country_phone_iso' => 'RU',
+                'languages' => ['ru', 'en'],
+                'bio' => 'Диджей, куратор музыкальных событий в центре города',
+                'avatar_url' => 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600',
+            ],
+            'tags' => ['музыка', 'диджей', 'вечер'],
+        ],
+        [
+            'title' => 'Горный weekend: треккинг и пикник',
+            'category' => 'Путешествия',
+            'thumbnail_url' => 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600',
+            'description' => 'Выезд на горный маршрут с прогулкой, пикником и фотографиями на закате. Подойдёт для любителей активности и красивых пейзажей вдали от мегаполиса.',
+            'coordinate_lat' => '56.0184',
+            'coordinate_lng' => '37.7714',
+            'country_iso' => 'RU',
+            'planing_days' => 23,
+            'slots' => 12,
+            'address' => 'Московская область, Сокольники, база «Горный бережок»',
+            'reserved' => 7,
+            'author' => [
+                'name' => 'Олег Крылов',
+                'email' => 'oleg.krylov@example.com',
+                'phone' => '+79169998877',
+                'country_phone_code' => '+7',
+                'country_phone_iso' => 'RU',
+                'languages' => ['ru'],
+                'bio' => 'Гид по активным маршрутам и природным тропам',
+                'avatar_url' => 'https://images.unsplash.com/photo-1504593811423-6dd665756598?w=600',
+            ],
+            'tags' => ['путешествия', 'природа', 'треккинг'],
+        ],
+        [
+            'title' => 'Фотосессия в архитектурном центре',
+            'category' => 'Фотография и видео',
+            'thumbnail_url' => 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=600',
+            'description' => 'Групповая съёмка на фоне исторической архитектуры, с направлением по позам, свету и композиции. Подходит для друзей, подруг, креативных команд и начинающих фотографов.',
+            'coordinate_lat' => '55.7599',
+            'coordinate_lng' => '37.6156',
+            'country_iso' => 'RU',
+            'planing_days' => 31,
+            'slots' => 10,
+            'address' => 'Москва, Тверская улица, 11, исторический квартал',
+            'reserved' => 6,
+            'author' => [
+                'name' => 'Ирина Плотникова',
+                'email' => 'irina.plotnikova@example.com',
+                'phone' => '+79051234567',
+                'country_phone_code' => '+7',
+                'country_phone_iso' => 'RU',
+                'languages' => ['ru', 'en'],
+                'bio' => 'Фотограф и визуальный редактор, работает с портретами и событиями',
+                'avatar_url' => 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600',
+            ],
+            'tags' => ['фото', 'съёмка', 'город'],
+        ],
+        [
+            'title' => 'Воркшоп по английскому для общения',
+            'category' => 'Языки и общение',
+            'thumbnail_url' => 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600',
+            'description' => 'Практический разговорный курс на английском: живые диалоги, игровые задания и работа в мини-группах. Отлично подходит для тех, кто хочет говорить свободно и без стресса.',
+            'coordinate_lat' => '55.7512',
+            'coordinate_lng' => '37.6225',
+            'country_iso' => 'RU',
+            'planing_days' => 48,
+            'slots' => 14,
+            'address' => 'Москва, ул. Мясницкая, 25, языковой клуб',
+            'reserved' => 11,
+            'author' => [
+                'name' => 'Элина Боровская',
+                'email' => 'elina.borovskaya@example.com',
+                'phone' => '+79032223344',
+                'country_phone_code' => '+7',
+                'country_phone_iso' => 'RU',
+                'languages' => ['ru', 'en'],
+                'bio' => 'Преподаватель английского и международных коммуникаций',
+                'avatar_url' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600',
+            ],
+            'tags' => ['english', 'общение', 'языки'],
+        ],
+        [
+            'title' => 'Турнир по настольным играм',
+            'category' => 'Настольные игры',
+            'thumbnail_url' => 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600',
+            'description' => 'Набор самых популярных настольных игр, мини-турнир, дружеская атмосфера и возможность попробовать новые механики. Идеально для компаний и новичков.',
+            'coordinate_lat' => '55.7848',
+            'coordinate_lng' => '37.5993',
+            'country_iso' => 'RU',
+            'planing_days' => 62,
+            'slots' => 24,
+            'address' => 'Москва, Кожевническая улица, 10, Game Room',
+            'reserved' => 18,
+            'author' => [
+                'name' => 'Артём Дубинин',
+                'email' => 'artem.dubin@example.com',
+                'phone' => '+79115554433',
+                'country_phone_code' => '+7',
+                'country_phone_iso' => 'RU',
+                'languages' => ['ru'],
+                'bio' => 'Арбитр настольных турниров и организатор игровых клубов',
+                'avatar_url' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600',
+            ],
+            'tags' => ['настолки', 'игры', 'команда'],
+        ],
+        [
+            'title' => 'Вечер вкусной еды и новых друзей',
+            'category' => 'Еда и напитки',
+            'thumbnail_url' => 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600',
+            'description' => 'Неформальный ужин в формате «смотри, пробуй, общайся»: небольшие блюда, разнообразные напитки и разговоры в уютной компании. Без строгих формальностей.',
+            'coordinate_lat' => '55.7610',
+            'coordinate_lng' => '37.6102',
+            'country_iso' => 'RU',
+            'planing_days' => 75,
+            'slots' => 30,
+            'address' => 'Москва, ул. Пятницкая, 12, домашняя кухня',
+            'reserved' => 19,
+            'author' => [
+                'name' => 'Марина Белова',
+                'email' => 'marina.belova@example.com',
+                'phone' => '+79262224455',
+                'country_phone_code' => '+7',
+                'country_phone_iso' => 'RU',
+                'languages' => ['ru', 'en'],
+                'bio' => 'Кулинарный блогер и организатор событий в формате dinner club',
+                'avatar_url' => 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600',
+            ],
+            'tags' => ['еда', 'друзья', 'ужин'],
+        ],
     ];
 
     /**
@@ -298,7 +466,8 @@ class MockDataSeeder extends Seeder
                     'coordinate_lng' => $eventData['coordinate_lng'],
                     'country_iso' => $eventData['country_iso'],
                     'planing_time' => Carbon::now()->addDays($eventData['planing_days'])->toDateTimeString(),
-                    'slots' => $eventData['slots']
+                    'slots' => $eventData['slots'],
+                    'approved' => true,
                 ]
             );
 
@@ -331,6 +500,7 @@ class MockDataSeeder extends Seeder
         }
 
         $members = $event->members()->with('user')->get()->pluck('user');
+        $eventDate = Carbon::parse($event->planing_time);
 
         $messages = [
             sprintf('Всем привет! Создал чат для события «%s». Задавайте вопросы 👋', $event->title),
@@ -354,9 +524,10 @@ class MockDataSeeder extends Seeder
                 'user_id' => $user->id,
             ]);
 
-            // Разносим сообщения по времени (от старого к новому),
-            // чтобы порядок в чате был стабильным и естественным.
-            $message->created_at = now()->subMinutes(($total - $i) * 30);
+            // Разносим сообщения по времени относительно даты события,
+            // чтобы чат выглядел естественно и привязывался к реальному мероприятию.
+            $offsetDays = max(1, $total - $i);
+            $message->created_at = $eventDate->copy()->subDays($offsetDays)->subHours(($i % 4) * 3 + 2);
             $message->save();
         }
     }
