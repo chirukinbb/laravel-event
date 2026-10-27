@@ -58,7 +58,7 @@ class EventsController extends Controller
             ->with(['category', 'tags'])
             ->withCount('members')
             ->whereApproved(true)
-            ->latest()
+            ->orderBy('planing_time')
             ->paginate();
 
         return EventCollection::collection($events);
@@ -70,7 +70,7 @@ class EventsController extends Controller
             ->where('planing_time', $request->get('status') === 'archive' ? '<' : '>', now())
             ->with(['members', 'category', 'tags'])
             ->withCount('members')
-            ->latest()
+            ->orderBy('planing_time')
             ->paginate();
 
         return EventCollection::collection($events);
@@ -82,7 +82,7 @@ class EventsController extends Controller
             ->where('planing_time', $request->get('status') === 'archive' ? '<' : '>', now())
             ->with(['category', 'tags'])
             ->withCount('members')
-            ->latest()
+            ->orderBy('planing_time')
             ->paginate();
 
         return EventCollection::collection($events);
