@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Chat\Models\Chat;
+use Modules\Chat\Models\Message;
 
 class Event extends Model
 {
@@ -68,6 +69,12 @@ class Event extends Model
 
         static::created(function (Event $event) {
             $chat = $event->chat()->create([]);
+
+            Message::create([
+                'chat_id' => $chat->id,
+                'user_id' => $event->user_id,
+                'content' => sprintf('Всем привет! Создал чат для события «%s». Задавайте вопросы ', $event->title),
+            ]);
 
             if ($event->author?->fcm_token) {
                 \Firebase::messaging()->subscribeToTopic('chat' . $chat->id, [$event->author->fcm_token]);

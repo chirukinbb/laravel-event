@@ -503,10 +503,10 @@ class MockDataSeeder extends Seeder
         $eventDate = Carbon::parse($event->planing_time);
 
         $messages = [
-            sprintf('Всем привет! Создал чат для события «%s». Задавайте вопросы 👋', $event->title),
+            sprintf('Всем привет! Создал чат для события «%s». Задавайте вопросы ', $event->title),
             'Подскажите, во сколько лучше подойти?',
             'Уже записался, очень жду встречи!',
-            'Кто-нибудь был на похожем мероприятии? Поделитесь впечатлениями 🙂',
+            'Кто-нибудь был на похожем мероприятии? Поделитесь впечатлениями',
             'Отличная идея, обязательно приду!',
             'Если будут вопросы по площадке — пишите, сориентирую.',
         ];
@@ -527,7 +527,7 @@ class MockDataSeeder extends Seeder
             // Разносим сообщения по времени относительно даты события,
             // чтобы чат выглядел естественно и привязывался к реальному мероприятию.
             $offsetDays = max(1, $total - $i);
-            $message->created_at = $eventDate->copy()->subDays($offsetDays)->subHours(($i % 4) * 3 + 2);
+            $message->created_at = now()->copy()->subDays($offsetDays)->subHours(($i % 4) * 3 + 2);
             $message->save();
         }
     }
