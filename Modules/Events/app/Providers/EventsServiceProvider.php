@@ -10,7 +10,6 @@ use Modules\Events\Console\Commands\NewEventApprovedCommand;
 use Modules\Events\Console\Commands\UpdateEventApprovedCommand;
 use Modules\Events\Enums\PermissionEnum;
 use Nwidart\Modules\Support\ModuleServiceProvider;
-use Schedule;
 
 class EventsServiceProvider extends ModuleServiceProvider
 {
@@ -41,15 +40,13 @@ class EventsServiceProvider extends ModuleServiceProvider
         RouteServiceProvider::class,
     ];
 
-    /**
-     * Define module schedules.
-     *
-     * @param $schedule
-     */
-    protected function configureSchedules(Schedule|\Illuminate\Console\Scheduling\Schedule $schedule): void
+    protected function registerCommandSchedules(): void
     {
-        $schedule->command('approved:new-event')->hourly();
-        $schedule->command('approved:update-event')->hourly();
+        $this->app->booted(function () {
+            $schedule = $this->app->make(\Illuminate\Console\Scheduling\Schedule::class);
+            $schedule->command('approved:new-event')->hourly();
+            $schedule->command('approved:update-event')->hourly();
+        });
     }
 
     public function boot(): void
