@@ -201,4 +201,8 @@ return [
         "XK" => "Kosovo",
         "TW" => "Taiwan"
     ],
+    'conditions' => [
+        'free' => 'Free',
+        'paid' => 'Paid'
+    ],
 ];

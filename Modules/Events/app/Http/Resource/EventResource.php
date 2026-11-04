@@ -56,14 +56,27 @@ class EventResource extends JsonResource
         $event->addUnit('slots', $this->resource->slots);
         $event->addUnit('tags', $this->resource->tags->map(fn(Tag $tag) => $tag->name));
         $event->addUnit('reserved', $this->resource->members_count);
+        $event->addUnit('condition', $this->resource->condition);
+        $event->addUnit('price', $this->resource->price);
 
         if ($member?->id) {
             $event->addUnit('member', $member?->id);
+
+            if ($member->comment) {
+                $event->addUnit('comment', CommentResource::make($member));
+            }
         }
 
         if ($request->user()->id === $this->resource->user_id) {
-            $event->addUnit('members', $this->getMembers());
-            $event->addUnit('approved', !!$this->resource->approved);
+            if (Carbon::parse($this->resource->planning_time) < now()) {
+                $event->addUnit('comments', CommentResource::collection($this->resource->members));
+            } else {
+                $event->addUnit('members', $this->getMembers());
+                $event->addUnit('approved', !!$this->resource->approved);
+
+                if (!$this->resource->is_public && $this->resource->approved)
+                    $event->addUnit('link', env('DEEP_LINK') . 'event/' . $this->resource->id);
+            }
 
             if (!$this->resource->approved && $this->resource->reason)
                 $event->addUnit('reason', $this->resource->reason);

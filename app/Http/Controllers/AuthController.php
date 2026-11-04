@@ -124,7 +124,7 @@ class AuthController extends Controller
                 return redirect()->route('dashboard');
             }
 
-            return redirect()->away(env('DEEP_LINK') . "?token={$user->createToken(RoleEnum::USER->name)->plainTextToken}");
+            return redirect()->away(env('DEEP_LINK') . "auth-callback?token={$user->createToken(RoleEnum::USER->name)->plainTextToken}");
 
         } catch (\Exception $e) {
             // 2. Ошибка авторизации через OAuth (например, отмена пользователем, сбой токена и т.д.)
@@ -139,7 +139,7 @@ class AuthController extends Controller
                 return redirect()->route('login')->withErrors(['error' => 'Failed to login via ' . $provider]);
             }
 
-            return redirect()->away(env('DEEP_LINK') . '?error=oauth_failed');
+            return redirect()->away(env('DEEP_LINK') . 'auth-callback?error=oauth_failed');
         }
     }
 
@@ -152,6 +152,6 @@ class AuthController extends Controller
             'has_token' => !empty($token),
         ]);
 
-        return redirect()->away(env('DEEP_LINK') . "?token={$token}");
+        return redirect()->away(env('DEEP_LINK') . "auth-callback?token={$token}");
     }
 }

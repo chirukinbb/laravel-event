@@ -23,6 +23,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::middleware(EventOwnerMiddleware::class)->group(function () {
             Route::put('/', [EventsController::class, 'update'])->middleware(EventUpdateMiddleware::class);
             Route::delete('/', [EventsController::class, 'destroy']);
+
+            Route::get('comments', [EventsController::class, 'comments']);
         });
 
         Route::prefix('member/{member}')->middleware(['auth:sanctum', MemberMiddleware::class])->group(function () {

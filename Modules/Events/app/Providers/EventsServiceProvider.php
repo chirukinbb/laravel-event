@@ -56,6 +56,7 @@ class EventsServiceProvider extends ModuleServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'Database/Migrations'));
         $this->registerCommands();
+        $this->registerCommandSchedules();
 
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
             $event->menu->addAfter('dashboard', [

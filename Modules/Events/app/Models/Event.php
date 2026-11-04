@@ -28,10 +28,13 @@ class Event extends Model
         'slots',
         'approved',
         'reason',
-        'updated'
+        'updated',
+        'condition',
+        'price',
+        'is_public'
     ];
 
-    protected $casts = ['planing_time' => 'datetime', 'is_happened' => 'boolean'];
+    protected $casts = ['planing_time' => 'datetime', 'is_happened' => 'boolean', 'is_public' => 'boolean'];
 
     public function category()
     {

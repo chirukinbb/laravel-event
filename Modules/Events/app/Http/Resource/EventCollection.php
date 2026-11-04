@@ -31,6 +31,7 @@ class EventCollection extends JsonResource
             'slots' => $this->resource->slots,
             'reserved' => $this->resource->members_count,
             'planing_time' => Carbon::parse($this->resource->planing_time)->timestamp,
+            'distance_km' => $this->distance_km !== null ? (int)$this->distance_km : null
         ];
     }
 }
