@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::table('events', function (Blueprint $table) {
             $table->enum('condition', array_keys(config('events.conditions')))->default('free');
             $table->integer('price')->default(0);
-            $table->boolean('is_public')->default(false);
+            $table->boolean('is_public')->default(true);
         });
     }
 

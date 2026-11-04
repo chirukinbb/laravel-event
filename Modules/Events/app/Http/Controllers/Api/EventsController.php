@@ -58,7 +58,8 @@ class EventsController extends Controller
             })
             ->with(['category', 'tags'])
             ->withCount('members')
-            ->whereApproved(true);
+            ->whereApproved(true)
+            ->whereIsPublic(true);
 
         // 3. Сортировка: от ближнего к дальнему, затем по времени
         if ($lat && $lng) {
