@@ -12,8 +12,8 @@ use Illuminate\Queue\SerializesModels;
 use Kreait\Firebase\Messaging\MulticastSendReport;
 use Log;
 use Modules\Events\Models\Event;
-use Modules\Events\Notifications\EventNotification;
-use Modules\Events\Notifications\ModerationMessageNotification;
+use Modules\Events\Notifications\ModerationEventNotification;
+use Modules\Events\Notifications\NewEventNotification;
 use Modules\Users\Models\Filter;
 use Modules\Users\Traits\FilterTrait;
 
@@ -35,7 +35,7 @@ class NewEventNotificationJob implements ShouldQueue
 
         $author = User::find($event->user_id);
 
-        $author->notify(new ModerationMessageNotification($event));
+        $author->notify(new ModerationEventNotification($event));
 
         if (!$event->approved)
             return;
@@ -64,23 +64,24 @@ class NewEventNotificationJob implements ShouldQueue
                     return;
                 }
 
-                $distance = $this->distance(
-                    $filter->center[0],
-                    $filter->center[1],
-                    $event->coordinate_lat,
-                    $event->coordinate_lng
-                );
-
-                if ($distance <= $filter->radius) {
-                    $tokens[$user->id] = (string)$user->fcm_token;
-                }
+//                $distance = $this->distance(
+//                    $filter->center[0],
+//                    $filter->center[1],
+//                    $event->coordinate_lat,
+//                    $event->coordinate_lng
+//                );
+//
+//                if ($distance <= $filter->radius) {
+//                    $tokens[$user->id] = (string)$user->fcm_token;
+//                }
+                $tokens[$user->id] = (string)$user->fcm_token;
             });
 
         if (empty($tokens)) {
             return;
         }
 
-        $message = (new EventNotification($event))->toFcm(null); // без адресата
+        $message = (new NewEventNotification($event))->toFcm(null); // без адресата
         $messaging = Firebase::messaging();
         $failed = false;
 

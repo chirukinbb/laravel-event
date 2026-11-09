@@ -66,13 +66,14 @@ class EventResource extends JsonResource
                 $event->addUnit('comment', CommentResource::make($member));
             }
         }
+        
+        $event->addUnit('approved', !!$this->resource->approved);
 
         if ($request->user()->id === $this->resource->user_id) {
             if (Carbon::parse($this->resource->planning_time) < now()) {
                 $event->addUnit('comments', CommentResource::collection($this->resource->members));
             } else {
                 $event->addUnit('members', $this->getMembers());
-                $event->addUnit('approved', !!$this->resource->approved);
 
                 if (!$this->resource->is_public && $this->resource->approved)
                     $event->addUnit('link', env('DEEP_LINK') . 'event/' . $this->resource->id);

@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Kreait\Firebase\Messaging\MulticastSendReport;
 use Modules\Event\Repositories\GeoRepository;
 use Modules\Events\Models\Event;
-use Modules\Events\Notifications\EventNotification;
+use Modules\Events\Notifications\UpdateEventNotification;
 use Modules\Users\Models\Filter;
 
 class EventUpdatedNotificationJob implements ShouldQueue
@@ -53,7 +53,7 @@ class EventUpdatedNotificationJob implements ShouldQueue
             return;
         }
 
-        $message = (new EventNotification($event))->toFcm(null);
+        $message = (new UpdateEventNotification($event))->toFcm(null);
         $messaging = \Firebase::messaging();
 
         // FCM ограничивает multicast 500 токенами

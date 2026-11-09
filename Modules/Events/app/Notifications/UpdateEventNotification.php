@@ -8,7 +8,7 @@ use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
-class ModerationMessageNotification extends Notification
+class UpdateEventNotification extends Notification
 {
     public function __construct(readonly private Event $event)
     {
@@ -22,8 +22,8 @@ class ModerationMessageNotification extends Notification
     public function toFcm($notifiable): FcmMessage
     {
         return (new FcmMessage(notification: new FcmNotification(
-            title: 'Event was ' . ($this->event->approved ? 'approved' : 'rejected'),
-            body: 'The reason: ' . $this->event->reason,
+            title: 'Event was updated',
+            body: 'Event was updated by ' . $this->event->user->name . '. Check it out!',
             image: $this->event->thumbnail_url
         )))->data(['screen' => 'single_event', 'event_id' => $this->event->id])->custom([
             'android' => [

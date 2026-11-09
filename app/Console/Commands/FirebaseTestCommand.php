@@ -6,7 +6,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Modules\Events\Models\Event;
-use Modules\Events\Notifications\EventNotification;
+use Modules\Events\Notifications\UpdateEventNotification;
 
 class FirebaseTestCommand extends Command
 {
@@ -19,6 +19,6 @@ class FirebaseTestCommand extends Command
         $user = User::where('email', 'chirukin@gmail.com')->first();
         $event = Event::first();
 
-        $user->notify(new EventNotification($event));
+        $user->notify(new UpdateEventNotification($event));
     }
 }
