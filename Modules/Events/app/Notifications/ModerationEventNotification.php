@@ -25,7 +25,7 @@ class ModerationEventNotification extends Notification
             title: 'Event was ' . ($this->event->approved ? 'approved' : 'rejected'),
             body: $this->event->approved ? '' : 'The reason: ' . $this->event->reason,
             image: $this->event->thumbnail_url
-        )))->data(['screen' => 'single_event', 'event_id' => $this->event->id])->custom([
+        )))->data(['screen' => 'single_event', 'event_id' => (string)$this->event->id])->custom([
             'android' => [
                 'priority' => 'high', // Пробуждает устройство[cite: 2]
                 'notification' => [
