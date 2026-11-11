@@ -2,5 +2,6 @@
   "Users": true,
   "Events": true,
   "Chat": true,
-  "Notificatiion": true
+  "Notificatiion": true,
+  "Bot": true
 }

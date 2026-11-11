@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Chat extends Model
 {
+    protected $fillable = ['chatable_type', 'chatable_id'];
+
     public function chatable(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();
